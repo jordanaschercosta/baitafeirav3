@@ -13,9 +13,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'logged' => \App\Http\Middleware\RedirectIfLogged::class,
-        ]);
-
-        $middleware->alias([
             'autorize' => \App\Http\Middleware\Autorize::class,
         ]);
     })
