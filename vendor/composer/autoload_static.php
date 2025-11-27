@@ -36,6 +36,7 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         '7f7ac2ddea9cc3fb4b2cc201d63dbc10' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Log/functions.php',
         '493c6aea52f6009bab023b26c21a386a' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/functions.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
+        'd21d43db5f6e840ee7b10744ec7fdf66' => __DIR__ . '/../..' . '/app/Helpers/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -481,7 +482,6 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\Http\\Controllers\\ParticipacaoController' => __DIR__ . '/../..' . '/app/Http/Controllers/ParticipacaoController.php',
         'App\\Http\\Controllers\\ProdutoController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProdutoController.php',
         'App\\Http\\Controllers\\SessaoController' => __DIR__ . '/../..' . '/app/Http/Controllers/SessaoController.php',
-        'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\Autorize' => __DIR__ . '/../..' . '/app/Http/Middleware/Autorize.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',

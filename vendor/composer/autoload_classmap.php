@@ -14,7 +14,6 @@ return array(
     'App\\Http\\Controllers\\ParticipacaoController' => $baseDir . '/app/Http/Controllers/ParticipacaoController.php',
     'App\\Http\\Controllers\\ProdutoController' => $baseDir . '/app/Http/Controllers/ProdutoController.php',
     'App\\Http\\Controllers\\SessaoController' => $baseDir . '/app/Http/Controllers/SessaoController.php',
-    'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
     'App\\Http\\Middleware\\Autorize' => $baseDir . '/app/Http/Middleware/Autorize.php',
     'App\\Http\\Middleware\\EncryptCookies' => $baseDir . '/app/Http/Middleware/EncryptCookies.php',
