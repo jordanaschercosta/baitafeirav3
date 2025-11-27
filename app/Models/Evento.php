@@ -19,7 +19,6 @@ class Evento extends Model
         'slug',
         'inicio',
         'fim',
-        'local',
         'descricao',
         'status',
         'user_id',

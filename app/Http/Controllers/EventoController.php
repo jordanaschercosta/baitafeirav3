@@ -42,7 +42,6 @@ class EventoController extends Controller
         $request->validate([
             'inicio' => 'required|date|after_or_equal:today',
             'fim' => 'required|date|after:inicio',
-            'local' => 'required|string|max:255',
             'imagem_url' => 'required',
             'cep' => 'required',
             'rua' => 'required',
@@ -64,7 +63,6 @@ class EventoController extends Controller
             'titulo' => $request->titulo,
             'inicio' => $request->inicio,
             'fim' => $request->fim,
-            'local' => $request->local,
             'descricao' => $request->descricao,
             'status' => 'Confirmado',
             'user_id' => session('user_id'),
@@ -161,7 +159,6 @@ class EventoController extends Controller
             'titulo' => $request->titulo,
             'inicio' => $request->inicio,
             'fim' => $request->fim,
-            'local' => $request->local,
             'descricao' => $request->descricao,
             'cep' => $request->cep,
             'rua' => $request->rua,
