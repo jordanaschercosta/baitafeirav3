@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evento;
-use App\Services\EventoService;
 use Exception;
 use Illuminate\Http\Request;
-use PhpParser\Node\Expr\Throw_;
-use Throwable;
 
 class EventoController extends Controller
 {
@@ -16,6 +13,8 @@ class EventoController extends Controller
      */
     public function index()
     {
+        $this->crudService->createNotificacao([]);
+
         if (isUserOrganizador()) {
             $proximosEventos = $this->crudService->getEventosByUser(session('user_id'));
             return view('eventos.index_admin', compact('proximosEventos'));
@@ -23,6 +22,7 @@ class EventoController extends Controller
         
         $proximosEventos = $this->crudService->getProximosEventos(session('user_id'));
         $participacoes = $this->crudService->getMeusEventos(session('user_id'));
+
         return view('eventos.index', compact('proximosEventos', 'participacoes'));
     }
 

@@ -36,7 +36,15 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav ms-auto">
                                 @if(!empty(session('user_email')))
-                                    <li><a class="nav-link px-3 py-2" href="{{ route('eventos.index') }}"><i class="fas fa-bell"></i> </a></li>
+                                     <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle no-caret px-3 py-2 position-relative" id="notification-dropdown-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-bell i-fix"></i>
+                                            <span id="notification-badge" style="display: none" class="badge bg-primary-subtle text-primary-emphasis rounded-pill badge-fix"></span>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" id="notification-dropdown">
+                                            <li><a class="dropdown-item" href="#">Nenhuma notificação</a></li>
+                                        </ul>
+                                    </li>
                                     <li><a class="nav-link" href="{{ route('eventos.index') }}"><i class="far fa-calendar"></i> Eventos</a></li>
                                     @if (isUserExpositor())
                                         <li><a class="nav-link" href="{{ route('bancas.index') }}"><i class="fas fa-store"></i> Bancas</a></li>

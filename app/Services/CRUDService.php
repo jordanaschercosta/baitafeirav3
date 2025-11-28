@@ -90,7 +90,6 @@ class CRUDService
         ]);
     }
 
-
     public function atualizarEvento(int $id, array $data)
     {
         $evento = Models\Evento::findOrFail($id);
@@ -237,5 +236,31 @@ class CRUDService
         }
 
         return $evento->delete();
+    }
+
+    public function createNotificacao($obj) {
+
+        $dataSave = [
+            'titulo' => 'Notificação Teste',
+            'mensagem' => 'Teste',
+            'banca_id' => null,
+            'url' => '',
+            'tipo' => 'teste',
+            'evento_id' => null,
+            'produto_id' => null
+        ];
+
+        return Models\Notificacao::create($dataSave);
+    }
+
+    public function getNotificacoesNaoLidas($idsLidas)
+    {
+        $query = Models\Notificacao::orderBy('id', 'desc');
+
+        if (!empty($idsLidas)) {
+            $query->whereNotIn('id', $idsLidas);
+        }
+
+        return $query->get();
     }
 }

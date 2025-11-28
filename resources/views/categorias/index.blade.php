@@ -38,14 +38,14 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Localização enviada com sucesso:', data);
+                //
             })
             .catch(error => {
-                console.error('Erro ao enviar localização:', error);
+               //
             });
         },
         function (error) {
-            console.error("Erro ao pegar localização:", error);
+            //
         }
     );
 </script>

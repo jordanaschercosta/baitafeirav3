@@ -63,3 +63,24 @@ ul.nav-inline.right {
     color: inherit;
     text-decoration: none; 
 }
+
+.no-caret::after {
+    display: none !important;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.i-fix {
+    position: absolute;
+    top: 14px;
+    left: 0px;
+}
+
+.badge-fix {
+    position: absolute;
+    top: 10px;
+    left: 8px;
+    font-size: 8px;
+}

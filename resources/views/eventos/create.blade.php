@@ -20,6 +20,23 @@
             <input type="text" name="titulo" id="titulo" class="form-control" required>
         </div>
 
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label for="nome">Início *</label>
+                <input type="datetime-local" name="inicio" id="inicio" class="form-control" required>
+            </div>
+    
+            <div class="col-md-6 form-group">
+                <label for="endereco">Fim *</label>
+                <input type="datetime-local" name="fim" id="fim" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="nome">Descrição *</label>
+            <textarea name="descricao" id="descricao" class="form-control" required></textarea>
+        </div>
+
         <div class="form-group">
             <label for="foto_url">Imagem *</label>
             <input type="file" id="imagem_url" data-aspectratio="retangular" name="imagem_url" accept="image/*">
@@ -35,21 +52,6 @@
 
         <div class="form-group">
             <img id="preview" style="max-width: 1000x; display:none;">
-        </div>
-
-        <div class="form-group">
-            <label for="nome">Início *</label>
-            <input type="datetime-local" name="inicio" id="inicio" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label for="endereco">Fim *</label>
-            <input type="datetime-local" name="fim" id="fim" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label for="nome">Descrição *</label>
-            <textarea name="descricao" id="descricao" class="form-control" required></textarea>
         </div>
 
            <div class="row">  

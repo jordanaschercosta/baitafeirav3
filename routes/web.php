@@ -8,6 +8,7 @@ use App\Http\Controllers\BancaController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\ParticipacaoController;
+use App\Http\Controllers\NotificacaoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,3 +46,6 @@ Route::middleware(['autorize'])->group(function () {
     Route::resource('eventos', EventoController::class);
     Route::resource('participacoes', ParticipacaoController::class);
 });
+
+Route::get('/notificacoes', [NotificacaoController::class, 'index']);
+Route::get('/notificacoes/lido', [NotificacaoController::class, 'lido']);

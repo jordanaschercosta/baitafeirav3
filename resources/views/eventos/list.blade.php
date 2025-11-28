@@ -30,7 +30,7 @@
         <div class="col-md-4">
             <a href="{{ route('eventos.show', $evento->slug) }}" class="reset-link">
                 <div class="thumbnail">
-                    <img style="max-width: 100%;" src="{{ asset($evento->imagem_url) }}">
+                    <img style="max-width: 100%;" src="{{ asset('storage/uploads/' . $evento->imagem_url) }}">
                 </div>
                 <h5>{{ $evento->titulo }}</h5>
                 <p><i class="fas fa-calendar"></i> {{ $evento->inicio }}</p>
