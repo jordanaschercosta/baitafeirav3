@@ -23,7 +23,7 @@
         <p>{{ $banca->descricao }}</p>
     </div>
     <div class="col-md-5 text-center">
-        <img src="{{ asset($banca->foto_url) }}" 
+        <img src="{{ asset('storage/uploads/' . $banca->foto_url) }}" 
             alt="Foto da banca" 
             style="width:240px; border-radius:50%; object-fit:cover;">
     </div>
@@ -35,7 +35,7 @@
     <div class="galeria">
         @foreach ($banca->produtos as $produto)
             <div class="imgContainer">
-                <img src="{{ asset($produto->imagem_url) }}" alt="{{ $produto->nome}} ">
+                <img src="{{ asset('storage/uploads/' . $produto->imagem_url) }}" alt="{{ $produto->nome}} ">
                 <br>
                 <h5 class="text-center">{{$produto->nome }}</h5>
                 <p class="text-center">R$ {{$produto->preco }}</p>

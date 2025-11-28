@@ -66,7 +66,7 @@
     @foreach ($listaBancas as $banca)
         <a href="{{ route('bancas.show', ['banca' => $banca->slug, 'evento' => $evento->id]) }}" class="col-md-2 click-item">
             <div class="img-wrapper">
-                <img src="{{ asset($banca->foto_url) }}">
+                <img src="{{ asset('storage/uploads/' . $banca->foto_url) }}">
                 <p class="text-center">{{ $banca->nome_fantasia }}</p>
             </div>
         </a>
