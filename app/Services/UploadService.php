@@ -21,11 +21,14 @@ class UploadService
             $image = base64_decode($image);
     
             $filename = uniqid() . '.' . $type;
-            $path = public_path('uploads/' . $filename);
+            $path = storage_path('app/public/uploads/'.$filename);
     
             file_put_contents($path, $image);
-    
-            return 'uploads/' . $filename;
+            
+            $publicUrl = $filename;
+
+            return $publicUrl;
+
         } catch (Exception $exception) {
 
             throw $exception;

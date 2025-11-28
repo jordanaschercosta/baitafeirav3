@@ -14,7 +14,7 @@
 </nav>
 
 <div class="banner">
-    <img style="width: 100%; margin-bottom: 1.2pc;  " src="{{ asset($evento->imagem_url) }}">
+    <img style="width: 100%; margin-bottom: 1.2pc;" src="{{ asset('storage/uploads/' . $evento->imagem_url) }}">
 </div>
 
 @if (isEventOrganizador($evento->user->id))

@@ -36,7 +36,7 @@
         <input type="hidden" name="cropped_image" id="cropped_image">
 
         <div class="form-group">
-            <img id="preview" style="max-width: 100%;" src="{{ asset($evento->imagem_url) }}">
+            <img id="preview" style="max-width: 100%;" src="{{ asset('storage/uploads/' . $evento->imagem_url) }}">
         </div>
 
         <div class="form-group">
