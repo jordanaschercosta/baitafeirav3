@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\BancaController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\EventoController;
+use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\ParticipacaoController;
 use App\Http\Controllers\NotificacaoController;
 
@@ -40,12 +41,18 @@ Route::resource('categorias', CategoriasController::class);
 
 Route::get('/', [CategoriasController::class, 'index'])->name('home');
 
+// Route::get('/notificacoes', [NotificacaoController::class, 'index']);
+// Route::get('/notificacoes/lido', [NotificacaoController::class, 'lido']);
+
 Route::middleware(['autorize'])->group(function () {
+    Route::resource('favoritos', FavoritoController::class);
+    Route::resource('notificacoes', NotificacaoController::class);
+
+    Route::post('/favoritos', [FavoritoController::class, 'store'])->name('favoritos.store');
+    Route::delete('favoritos/{favorito}', [FavoritoController::class, 'destroy'])->name('favoritos.destroy');
+
     Route::resource('bancas', BancaController::class);
     Route::resource('bancas.produtos', ProdutoController::class);
     Route::resource('eventos', EventoController::class);
     Route::resource('participacoes', ParticipacaoController::class);
 });
-
-Route::get('/notificacoes', [NotificacaoController::class, 'index']);
-Route::get('/notificacoes/lido', [NotificacaoController::class, 'lido']);

@@ -1,48 +1,79 @@
 @extends('layouts.app')
 
-@section('title', 'Microoemprendedores')
+@section('title', 'Produtos')
 
 @section('content')
 
-<a class="btn btn-primary float-end" href="{{ route('bancas.create')}}">Novo Banca</a>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ route('bancas.index') }}">Bancas</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Produtos de {{ $banca->nome_fantasia }}</li>
+    </ol>
+</nav>
 
-@if($bancas->isEmpty())
-    <p>Nenhuma banca cadastrado.</p>
+<div class="row mb-3">
+    <div class="col d-flex justify-content-end">
+        <a class="btn btn-light" href="{{ route('bancas.produtos.create', ['banca' => $banca->id]) }}">
+            <i class="fa-solid fa-box"></i> Cadastrar Produto
+        </a>
+    </div>
+</div>
+
+@if ($banca->produtos->isEmpty())
+    <p class="text-center">Nenhum produto cadastrado</p>
 @else
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nome Fantasia</th>
-                <th>Categoria</th>
-                <th>Endereço</th>
-                <th>Telefone</th>
-                <th>Instagram</th>
-                <!-- <th>Ações</th> -->
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($bancas as $banca)
-                <tr>
-                    <td>{{ $banca->nome_fantasia }}</td>
-                    <td>{{ $banca->categoria?->nome ?? 'Sem categoria' }}</td>
-                    <td>
-                        {{ $banca->endereco }}, {{ $banca->numero ?? '' }}, 
-                        {{ $banca->bairro ?? '' }} - {{ $banca->cidade ?? '' }}
-                    </td>
-                    <td>{{ $banca->telefone }}</td>
-                    <td>{{ $banca->instagram }}</td>
-                    <!-- <td>
-                        <a href="{{ route('bancas.edit', $micro->id) }}" class="btn btn-sm btn-primary">Editar</a>
-                        <form action="{{ route('bancas.destroy', $banca->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
-                        </form>
-                    </td> -->
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="row">
+        @foreach ($banca->produtos as $produto)
+            <div class="col-md-3 mb-4">
+                <div class="card item-card" style="border-radius: 10px; overflow:hidden; cursor:pointer;">
+                    <!-- Imagem -->
+                    <img src="{{ asset('storage/uploads/' . $produto->imagem_url) }}"
+                         class="card-img-top"
+                         alt="{{ $produto->nome }}"
+                         style="height: 180px; object-fit: cover;">
+
+                    <div class="card-body">
+                        <!-- Nome do produto -->
+                        <h5 class="card-title">{{ $produto->nome }}</h5>
+
+                        <!-- Descrição -->
+                        <p class="card-text" style="font-size: 14px;">
+                            {{ \Illuminate\Support\Str::limit($produto->descricao, 70, ' [...]') }}
+                        </p>
+
+                        <!-- Preço -->
+                        <p class="card-text fw-bold">
+                            R$ {{ number_format($produto->preco, 2, ',', '.') }}
+                        </p>
+
+                        <!-- Promoção -->
+                        @if($produto->em_promocao)
+                            <p class="text-success mb-1">Promoção! R$ {{ number_format($produto->valor_novo, 2, ',', '.') }}</p>
+                        @endif
+
+                        <!-- Ações -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('bancas.produtos.edit', ['banca' => $banca->id, 'produto' => $produto->id]) }}" 
+                               class="btn btn-sm btn-primary">Editar</a>
+
+                            <form action="{{ route('bancas.produtos.destroy', ['banca' => $banca->id, 'produto' => $produto->id]) }}" 
+                                  method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Tem certeza que deseja excluir o produto?')">
+                                    Excluir
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
 @endif
 
 @endsection

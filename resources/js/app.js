@@ -1,6 +1,6 @@
 import './bootstrap';
 
-async function executar() {
+async function checarNotificacoes() {
     try {
         const response = await fetch('/notificacoes'); 
         if (!response.ok) {
@@ -8,28 +8,11 @@ async function executar() {
         }
 
         const dados = await response.json();
-        const dropdown = document.getElementById('notification-dropdown');
 
         if (dados.data.length > 0) {
             document.getElementById('notification-badge').style.display = 'inline-block';
             document.getElementById('notification-badge').innerHTML = dados.data.length;
-
-            dropdown.innerHTML = '';
-
-            dados.data.forEach(notificacao => {
-                const a = document.createElement('a');
-                a.classList.add('dropdown-item');
-                a.href = notificacao.url || '#';
-                a.textContent = notificacao.titulo || 'Sem título';
-
-                dropdown.appendChild(a);
-            });
         } else {
-            const a = document.createElement('a');
-            a.classList.add('dropdown-item');
-            a.href = '#';
-            a.textContent = 'Nenhuma notificação';
-            dropdown.appendChild(a);
             document.getElementById('notification-badge').style.display = 'none';
             document.getElementById('notification-badge').innerHTML = '';
         }
@@ -40,8 +23,8 @@ async function executar() {
 }
 
 setTimeout(() => {
-    executar();
-    setInterval(executar, 20000);
+    checarNotificacoes();
+    setInterval(checarNotificacoes, 20000);
 }, 100);
 
 async function lerNotificacoes() {
@@ -51,7 +34,6 @@ async function lerNotificacoes() {
     }
 
     const dropdown = document.getElementById('notification-dropdown');
-
     const a = document.createElement('a');
     a.classList.add('dropdown-item');
     a.href = '#';
@@ -105,50 +87,78 @@ if (image) {
     });
 }
 
-document.querySelector('form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    if(cropper) {
-        const data = cropper.getData(); // pega x, y, width, height
-        document.getElementById('cropX').value = data.x;
-        document.getElementById('cropY').value = data.y;
-        document.getElementById('cropWidth').value = data.width;
-        document.getElementById('cropHeight').value = data.height;
-        document.getElementById('imagemOriginalHidden').value = image.src;
+const form = document.querySelector("form");
 
-        cropper.getCroppedCanvas().toBlob((blob) => {
-            let reader = new FileReader();
-            reader.onloadend = function() {
-                document.getElementById('cropped_image').value = reader.result;
-                e.target.submit(); // envia o form com a imagem cropada
-            }
-            reader.readAsDataURL(blob);
-        });
+if (form) {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if(cropper) {
+            const data = cropper.getData(); // pega x, y, width, height
+            document.getElementById('cropX').value = data.x;
+            document.getElementById('cropY').value = data.y;
+            document.getElementById('cropWidth').value = data.width;
+            document.getElementById('cropHeight').value = data.height;
+            document.getElementById('imagemOriginalHidden').value = image.src;
+
+            cropper.getCroppedCanvas().toBlob((blob) => {
+                let reader = new FileReader();
+                reader.onloadend = function() {
+                    document.getElementById('cropped_image').value = reader.result;
+                    e.target.submit(); // envia o form com a imagem cropada
+                }
+                reader.readAsDataURL(blob);
+            });
+        } else {
+            e.target.submit();
+        }
+    });
+}
+const cepInput = document.getElementById("cep");
+
+if (cepInput) {
+    document.getElementById('cep').addEventListener('change', function(e) {
+        const cep = this.value.replace(/\D/g, '');
+
+        if (cep.length !== 8 && cep.length !== 6) {
+            alert("CEP inválido!");
+            return;
+        }
+
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.erro) {
+                    alert("CEP não encontrado!");
+                    return;
+                }
+
+                // Preenche os campos
+                document.getElementById('rua').value = data.logradouro;
+                document.getElementById('bairro').value = data.bairro;
+                document.getElementById('cidade').value = data.localidade;
+                document.getElementById('uf').value = data.uf;
+            })
+            .catch(err => console.error('Erro ao buscar CEP:', err));
+    });
+}
+
+const check = document.getElementById('em_promocao');
+const valorNovo = document.getElementById('valor_novo');
+
+function toggleValorNovo() {
+    if (!check || !valorNovo) return;
+
+    if (check.checked) {
+        valorNovo.removeAttribute('disabled');
     } else {
-        e.target.submit();
+        valorNovo.setAttribute('disabled', true);
+        valorNovo.value = '';
     }
-});
+}
 
-document.getElementById('cep').addEventListener('change', function(e) {
-    const cep = this.value.replace(/\D/g, '');
+if (check) {
+    check.addEventListener('change', toggleValorNovo);
 
-    if (cep.length !== 8) {
-        alert("CEP inválido!");
-        return;
-    }
-
-    fetch(`https://viacep.com.br/ws/${cep}/json/`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.erro) {
-                alert("CEP não encontrado!");
-                return;
-            }
-
-            // Preenche os campos
-            document.getElementById('rua').value = data.logradouro;
-            document.getElementById('bairro').value = data.bairro;
-            document.getElementById('cidade').value = data.localidade;
-            document.getElementById('uf').value = data.uf;
-        })
-        .catch(err => console.error('Erro ao buscar CEP:', err));
-});
+    toggleValorNovo();
+}

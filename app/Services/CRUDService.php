@@ -33,6 +33,33 @@ class CRUDService
         ]);
     }
 
+    public function atualizarProduto(int $id, array $data)
+    {
+        $produto = Models\Produto::findOrFail($id);
+
+        $produto->update([
+            'nome'          => $data['nome'],
+            'imagem_url'    => $data['imagem_url'],
+            'descricao'     => $data['descricao'],
+            'preco'         => $data['preco'],
+            'em_promocao'   => $data['em_promocao'],
+            'valor_novo'    => $data['valor_novo']
+        ]);
+
+        return $produto->id;
+    }
+
+    public function deleteProduto($id)
+    {
+        $produto = Models\Produto::find($id);
+
+        if (!$produto) {
+            return false;
+        }
+
+        return $produto->delete();
+    }
+
     public function getBancasUsuario(int $user_id) 
     {
         return Models\Banca::where('user_id', $user_id)->get();

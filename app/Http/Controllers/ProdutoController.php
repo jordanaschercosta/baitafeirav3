@@ -12,9 +12,11 @@ class ProdutoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(int $bancaId)
     {
-        //
+        $banca = $this->crudService->getBancaById($bancaId);
+
+        return view('produtos.index', ['banca' => $banca]);
     }
 
     /**
@@ -45,7 +47,7 @@ class ProdutoController extends Controller
             return redirect()->route('produtos.create', $request->banca_id)->with('error', $e->getMessage());
         }
 
-        return redirect()->route('bancas.show', $produto->banca->slug)->with('success', 'Produto cadastrado com sucesso!');
+        return redirect()->route('bancas.produtos.index', [$produto->banca->id])->with('success', 'Produto cadastrado com sucesso!');
     }
 
     /**
@@ -59,24 +61,55 @@ class ProdutoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Models\Produto $produto)
+    public function edit(Models\Banca $banca, Models\Produto $produto)
     {
-        //
+        return view('produtos.edit', ['banca' => $banca, 'produto' => $produto]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Models\Produto $produto)
+    public function update(Request $request, Models\Banca $banca, Models\Produto $produto)
     {
-        //
+        $request->validate([
+            'nome' => 'required',
+            'descricao' => 'required',
+            'preco' => 'required',
+            'valor_novo' => 'required_if:em_promocao,1|numeric|nullable'
+        ]);
+
+        $imagem_url = $produto->imagem_url;
+        if (!empty($request->cropped_image)) {
+            try {
+                $imagem_url = $this->uploadService->uploadBlobImage($request->cropped_image);
+            } catch (Exception $e) {
+                //
+            }
+        }
+
+        $this->crudService->atualizarProduto($produto->id, [
+            'nome'          => $request->nome,
+            'imagem_url'    => $imagem_url,
+            'descricao'     => $request->descricao,
+            'preco'         => $request->preco,
+            'em_promocao'   => ($request->em_promocao) ? true : false,
+            'valor_novo'    => $request->valor_novo
+        ]);
+
+        return redirect()
+            ->route('bancas.produtos.index', ['banca' => $produto->banca])
+            ->with('success', 'Produto atualizado com sucesso!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Models\Produto $produto)
+    public function destroy(Models\Banca $banca, int $id)
     {
-        //
+        $this->crudService->deleteProduto($id);
+
+        return redirect()
+            ->route('bancas.produtos.index', ['banca' => $banca])
+            ->with('success', 'Produto excluído com sucesso!');
     }
 }

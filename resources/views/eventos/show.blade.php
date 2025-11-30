@@ -59,7 +59,7 @@
     {{ $evento->descricao }}
 </p>
 
-<p><strong>Local:</strong> {{ $evento->local }}</p>
+<p><strong>Local:</strong> {{ $evento->endereco }}</p>
 
 <h4>Bancas Participantes</h4>
 <div class="row">
@@ -93,7 +93,7 @@
     var marker = L.marker([{{ $evento->latitude }}, {{ $evento->longitude }}]).addTo(map);
 
     // Opcional: popup ao clicar
-    marker.bindPopup("<b>{{ $evento->titulo }}</b><br>{{ $evento->local }}");
+    marker.bindPopup("<b>{{ $evento->titulo }}</b><br>{{ $evento->endereco }}");
 </script>
 
 <br>

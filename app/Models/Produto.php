@@ -14,7 +14,9 @@ class Produto extends Model
         'nome',
         'descricao',
         'imagem_url',
-        'preco'
+        'preco',
+        'em_promocao',
+        'valor_novo'
     ];
 
     public function banca()

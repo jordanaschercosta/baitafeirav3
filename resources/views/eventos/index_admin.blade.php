@@ -16,7 +16,7 @@
                 <th>Título</th>
                 <th>Início</th>
                 <th>Fim</th>
-                <th>Local</th>
+                <th>Endereço</th>
                 <th colspan="2">Ações</th>
             </tr>
         </thead>

@@ -19,7 +19,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
-        @vite('resources/css/app.css')
+        <link rel="stylesheet" href="{{ asset('assets/app.css') }}">
     </head>
     <body class="antialiased">
         <header>
@@ -36,21 +36,17 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav ms-auto">
                                 @if(!empty(session('user_email')))
-                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle no-caret px-3 py-2 position-relative" id="notification-dropdown-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-bell i-fix"></i>
+                                    <li>
+                                        <a class="nav-link position-relative" href="{{ route('notificacoes.index') }}"><i class="fas fa-bell i-fix"></i> &nbsp;&nbsp;&nbsp;
                                             <span id="notification-badge" style="display: none" class="badge bg-primary-subtle text-primary-emphasis rounded-pill badge-fix"></span>
                                         </a>
-                                        <ul class="dropdown-menu dropdown-menu-end" id="notification-dropdown">
-                                            <li><a class="dropdown-item" href="#">Nenhuma notificação</a></li>
-                                        </ul>
                                     </li>
                                     <li><a class="nav-link" href="{{ route('eventos.index') }}"><i class="far fa-calendar"></i> Eventos</a></li>
+                                    @if (!isUserOrganizador())
+                                        <li><a class="nav-link" href="{{ route('favoritos.index') }}"><i class="far fa-heart"></i> Favoritos</a></li>
+                                    @endif
                                     @if (isUserExpositor())
                                         <li><a class="nav-link" href="{{ route('bancas.index') }}"><i class="fas fa-store"></i> Bancas</a></li>
-                                    @endif
-                                    @if (isUserCliente())
-                                        <li><a class="nav-link" href="#"><i class="far fa-heart"></i> Favoritos</a></li>
                                     @endif
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -72,6 +68,11 @@
                 </nav>
             @endif
         </header>
+
+        {{-- @if (isset($banner))
+            <section id="banner" style="background: url('{{ $banner }}')"></section>
+        @endif --}}
+
         <div class="container" id="main-container">
             <main>
                 @if(session('success'))
@@ -90,14 +91,41 @@
             </main>
         </div>
 
-        <footer class="text-center">
-            <p>&copy; 2025 Meu App</p>
+        <footer class="bg-light text-center text-lg-start mt-5 border-top">
+            <div class="container p-4">
+
+                <!-- Texto -->
+                <div class="text-center mb-3">
+                    <p class="mb-0">Siga-nos nas redes sociais</p>
+                </div>
+
+                <!-- Ícones sociais -->
+                <div class="text-center">
+                    <!-- Instagram -->
+                    <a href="https://instagram.com/seu_instagram" target="_blank" 
+                    class="btn btn-outline-dark btn-sm rounded-circle me-2">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+
+                    <!-- Facebook -->
+                    <a href="https://facebook.com/seu_facebook" target="_blank" 
+                    class="btn btn-outline-dark btn-sm rounded-circle">
+                        <i class="fa-brands fa-facebook"></i>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center py-3 bg-light">
+                <small>&copy; {{ date('Y') }} Sua Marca. Todos os direitos reservados.</small>
+            </div>
         </footer>
 
         <!-- JS global -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
-        @vite('resources/js/app.js')
+        <script src="{{ asset('assets/app.js') }}" defer></script>
     </body>
 </html>

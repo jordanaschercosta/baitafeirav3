@@ -1,0 +1,3 @@
+dropdown notificacoes corrigir -> criar tela de index de notificacoes
+gerar notificacão quando um evento/banca/produto é criado
+evitar erro de slug repetido para eventos

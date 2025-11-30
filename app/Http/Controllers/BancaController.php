@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
 use App\Models\Evento;
+use App\Models\Favorito;
 use Exception;
 
 class BancaController extends Controller
@@ -39,13 +40,8 @@ class BancaController extends Controller
             'nome_fantasia' => $request->nome_fantasia,
             'foto_url'      => '',
             'descricao'     => $request->descricao,
-            'endereco'      => $request->endereco,
-            'telefone'      => $request->telefone,
             'instagram'     => $request->instagram,
             'categoria_id'  => $request->categoria_id,
-            'bairro'        => $request->bairro,
-            'cidade'        => $request->cidade,
-            'numero'        => $request->numero,
         ]);
 
         try {
@@ -55,7 +51,7 @@ class BancaController extends Controller
             return redirect()->route('bancas.create', $banca->id)->with('error', $e->getMessage());
         }
 
-        return redirect()->route('bancas.index')->with('success', 'Banca cadastrada com sucesso!');
+        return redirect()->route('bancas.produtos.index', $banca)->with('success', 'Banca cadastrada com sucesso!');
     }
 
     /**
@@ -65,28 +61,57 @@ class BancaController extends Controller
     {
         $banca = $this->crudService->getBancaBySlug($slug);
 
+        $favorito = null;
+
+        if (session('user_id')) {
+            $favorito = Favorito::where('banca_id', $banca->id)
+                ->where('user_id', session('user_id'))
+                ->first();
+        }
+
+        // $banner = asset('images/banners/banca.jpg');
+
         $evento = null;
         if (request()->has('evento')) {
             $evento = Evento::find(request()->evento);
         }
 
-        return view('bancas.show', compact('banca', 'evento'));
+        return view('bancas.show', compact('banca', 'evento', 'favorito'));
     }
 
-    /**
+   /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Banca $banca)
+    public function edit($id)
     {
-        //
+        $banca = $this->crudService->getBancaById($id);
+        $categorias = Categoria::all();
+
+        return view('bancas.edit', compact('banca', 'categorias'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Banca $banca)
+    public function update(Request $request, $id)
     {
-        //
+        $banca = $this->crudService->getBancaById($id);
+
+        $banca->nome_fantasia = $request->nome_fantasia;
+        $banca->descricao     = $request->descricao;
+        $banca->instagram     = $request->instagram;
+        $banca->categoria_id  = $request->categoria_id;
+
+        try {
+            if ($request->cropped_image) {
+                $banca->foto_url = $this->uploadService->uploadBlobImage($request->cropped_image);
+            }
+            $banca->save();
+        } catch (Exception $e) {
+            return redirect()->route('bancas.edit', $banca->id)->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('bancas.index')->with('success', 'Banca atualizada com sucesso!');
     }
 
     /**

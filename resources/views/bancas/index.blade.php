@@ -4,38 +4,62 @@
 
 @section('content')
 
-<a class="btn btn-primary float-end" href="{{ route('bancas.create')}}">Nova Banca</a>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Bancas</li>
+    </ol>
+</nav>
+
+<!-- Botão Nova Banca alinhado à direita -->
+<div class="row mb-3">
+    <div class="col d-flex justify-content-end">
+        <a class="btn btn-light" href="{{ route('bancas.create') }}">
+            <i class="fas fa-store"></i> Cadastrar Banca
+        </a>
+    </div>
+</div>
 
 @if($bancas->isEmpty())
     <p>Nenhuma banca cadastrada.</p>
 @else
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nome Fantasia</th>
-                <th>Categoria</th>
-                <th>Endereço</th>
-                <th>Telefone</th>
-                <th>Instagram</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($bancas as $banca)
-                <tr>
-                    <td>{{ $banca->nome_fantasia }}</td>
-                    <td>{{ $banca->categoria?->nome ?? 'Sem categoria' }}</td>
-                    <td>
-                        {{ $banca->endereco }}, {{ $banca->numero ?? '' }}, 
-                        {{ $banca->bairro ?? '' }} - {{ $banca->cidade ?? '' }}
-                    </td>
-                    <td>{{ $banca->telefone }}</td>
-                    <td>{{ $banca->instagram }}</td>
-                    <td><a href="{{ route('bancas.show', $banca->slug) }}" class="btn btn-sm btn-default">Exibir</a></td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="row">
+        @foreach($bancas as $banca)
+            <div class="col-md-3 mb-4">
+                <div class="card item-card d-flex flex-column h-100" style="border-radius: 10px; overflow:hidden; cursor:pointer;">
+                    
+                    <!-- Imagem -->
+                    <img src="{{ asset('storage/uploads/' . $banca->foto_url) }}" 
+                         class="card-img-top"
+                         alt="{{ $banca->nome_fantasia }}"
+                         style="height: 180px; object-fit: cover;">
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $banca->nome_fantasia }}</h5>
+
+                        <p class="card-text" style="font-size: 14px;">
+                            {{ $banca->categoria?->nome ?? 'Sem categoria' }}
+                        </p>
+
+                        <p class="card-text" style="font-size: 14px;">
+                            @if($banca->instagram)
+                                <a href="https://instagram.com/{{ $banca->instagram }}" target="_blank">
+                                    {{ $banca->instagram }}
+                                </a>
+                            @else
+                                Sem Instagram
+                            @endif
+                        </p>
+
+                        <!-- Ações -->
+                        <a href="{{ route('bancas.produtos.index', $banca->id) }}" class="btn btn-sm btn-light">Ver Produtos</a>
+                        <a href="{{ route('bancas.show', $banca->slug) }}" class="btn btn-sm btn-light">Exibir</a>
+                        <a href="{{ route('bancas.edit', $banca->id) }}" class="btn btn-sm btn-light">Editar</a>
+                        <a href="{{ route('bancas.edit', $banca->id) }}" class="btn btn-sm btn-danger">Excluir</a>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
 @endif
 
 @endsection

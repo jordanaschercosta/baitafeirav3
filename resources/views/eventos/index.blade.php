@@ -24,7 +24,7 @@
                     <td>{{ $participacao->evento->titulo }}</td>
                     <td>{{ $participacao->evento->inicio }}</td>
                     <td>{{ $participacao->evento->fim }}</td>
-                    <td>{{ $participacao->evento->local }}</td>
+                    <td>{{ $participacao->evento->endereco }}</td>
                     <td>
                         <a href="{{ route('eventos.show', $participacao->evento->slug) }}" class="btn btn-sm btn-default">Ver mais</a>
                         <form action="{{ route('participacoes.destroy', $participacao->id) }}" 
@@ -65,10 +65,10 @@
                     <td>{{ $evento->titulo }}</td>
                     <td>{{ $evento->inicio }}</td>
                     <td>{{ $evento->fim }}</td>
-                    <td>{{ $evento->local }}</td>
+                    <td>{{ $evento->endereco }}</td>
                     <td>
                         <a href="{{ route('eventos.show', $evento->slug) }}" class="btn btn-sm btn-default">Ver mais</a>
-                        {{-- <a href="{{ route('participacao.create', $evento->id) }}" class="btn btn-sm btn-default">Confirmar presença</a> --}}
+                        <a href="{{ route('participacoes.create', ['evento' => $evento->id]) }}" class="btn btn-sm btn-default">Confirmar presença</a>
                     </td>
                 </tr>
             @endforeach

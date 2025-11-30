@@ -17,13 +17,8 @@ class Banca extends Model
         'nome_fantasia',
         'foto_url',
         'descricao',
-        'endereco',
-        'telefone',
         'instagram',
         'categoria_id',
-        'cidade',
-        'numero',
-        'bairro'
     ];
 
     public function produtos()
