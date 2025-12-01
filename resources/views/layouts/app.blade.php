@@ -53,8 +53,8 @@
                                             {{ session('user_email') }}
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <li class="dropdown-header">{{ session('user.tipo') }}</li>
-                                            <li><a class="dropdown-item" href="#">Minha Conta</a></li>
+                                            <li class="dropdown-header">{{ Str::ucfirst(session('user.tipo')) }}</li>
+                                            <li><a class="dropdown-item" href="{{ route('minha.conta') }}">Minha Conta</a></li>
                                             <li><hr class="dropdown-divider"></li>
                                             <li><a class="dropdown-item" href="{{ route('logout') }}">Sair</a></li>
                                         </ul>
@@ -68,10 +68,6 @@
                 </nav>
             @endif
         </header>
-
-        {{-- @if (isset($banner))
-            <section id="banner" style="background: url('{{ $banner }}')"></section>
-        @endif --}}
 
         <div class="container" id="main-container">
             <main>

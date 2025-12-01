@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Services\CRUDService;
 use App\Services\UserService;
+use Illuminate\Support\Str;
+use Throwable;
 
 class CadastroController extends Controller
 {
@@ -34,7 +37,8 @@ class CadastroController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'tipo' => 'required',
-            'password' => 'required|string|min:6|confirmed', // espera campo password_confirmation
+            'password' => 'required|string|min:6|confirmed', // espera campo password_confirmation,
+            'phone' => 'required|string|max:20'
         ]);
 
         // Criar usuário
@@ -42,11 +46,46 @@ class CadastroController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
-            'tipo' => $request->tipo
+            'tipo' => $request->tipo,
+            'phone' => $request->phone
         ]);
 
         // Redireciona ou retorna mensagem
         return redirect()->route('login')->with('success', 'Usuário cadastrado com sucesso!');
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function edit()
+    {
+        $user = $this->userService->getUserById(session('user_id'));
+
+        return view('cadastro.edit', compact('user'));
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'password' => 'nullable|min:8|confirmed',
+            'phone' => 'required|string|max:20'
+        ]);
+
+        $user = $this->userService->getUserById(session('user_id'));
+
+        $user->name = Str::title($request->name);
+        $user->phone = $request->phone;
+
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->save();
+
+        return redirect()
+            ->route('minha.conta')
+            ->with('success', 'Perfil atualizado com sucesso!');
     }
 
     /**

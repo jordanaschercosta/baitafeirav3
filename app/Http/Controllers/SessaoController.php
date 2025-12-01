@@ -87,6 +87,6 @@ class SessaoController extends Controller
     {
         $this->authenticationService->destroy();
 
-        return redirect()->route('home')->with('success', 'Sessão encerrada com sucesso!');
+        return redirect()->route('home');
     }
 }

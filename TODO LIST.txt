@@ -1,3 +1,4 @@
-dropdown notificacoes corrigir -> criar tela de index de notificacoes
-gerar notificacão quando um evento/banca/produto é criado
-evitar erro de slug repetido para eventos
+autorize apenas para organziador do evento alterar evento
+paginação em eventos index
+notificacao vincular ao usuario ( quando gerar notificacao de evento remarcado, envia apenas aos usuarios que irão participar)
+

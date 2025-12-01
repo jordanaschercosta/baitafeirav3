@@ -79,15 +79,25 @@ class Evento extends Model
         parent::boot();
 
         static::creating(function ($evento) {
+            $enderecoPart = collect([
+                $evento->rua ?? '',
+                $evento->bairro ?? '',
+                $evento->cidade ?? '',
+            ])->filter()->map(fn($item) => Str::slug($item, '-'))->implode('-');
             $slugBase = Str::slug($evento->titulo, '-');
             $data = Carbon::createFromFormat('d/m/Y H:i', $evento->inicio)->format('Y-m-d');
-            $evento->slug = "{$slugBase}-{$data}";
+            $evento->slug = "{$slugBase}-{$data}-{$enderecoPart}";
         });
 
         static::updating(function ($evento) {
+            $enderecoPart = collect([
+                $evento->rua ?? '',
+                $evento->bairro ?? '',
+                $evento->cidade ?? '',
+            ])->filter()->map(fn($item) => Str::slug($item, '-'))->implode('-');
             $slugBase = Str::slug($evento->titulo, '-');
             $data = Carbon::createFromFormat('d/m/Y H:i', $evento->inicio)->format('Y-m-d');
-            $evento->slug = "{$slugBase}-{$data}";
+            $evento->slug = "{$slugBase}-{$data}-{$enderecoPart}";
         });
     }
 }

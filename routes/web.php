@@ -37,12 +37,15 @@ Route::post('/resetar-senha', [CadastroController::class, 'resetPasswordAction']
 Route::get('/cadastro', [CadastroController::class, 'create'])->name('cadastro');
 Route::post('/cadastro', [CadastroController::class, 'store'])->name('cadastro.store');
 
+Route::get('/minha-conta', [CadastroController::class, 'edit'])->name('minha.conta');
+Route::put('/minha-conta', [CadastroController::class, 'update'])->name('cadastro.update');
+
 Route::resource('categorias', CategoriasController::class);
 
 Route::get('/', [CategoriasController::class, 'index'])->name('home');
 
 // Route::get('/notificacoes', [NotificacaoController::class, 'index']);
-// Route::get('/notificacoes/lido', [NotificacaoController::class, 'lido']);
+Route::get('/notificacoes/nao_lidas', [NotificacaoController::class, 'getNotificacoesNaoLidas']);
 
 Route::middleware(['autorize'])->group(function () {
     Route::resource('favoritos', FavoritoController::class);

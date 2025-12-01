@@ -85,6 +85,9 @@ class BancaController extends Controller
     public function edit($id)
     {
         $banca = $this->crudService->getBancaById($id);
+
+        $this->validaOwner($banca);
+
         $categorias = Categoria::all();
 
         return view('bancas.edit', compact('banca', 'categorias'));
@@ -96,6 +99,8 @@ class BancaController extends Controller
     public function update(Request $request, $id)
     {
         $banca = $this->crudService->getBancaById($id);
+
+        $this->validaOwner($banca);
 
         $banca->nome_fantasia = $request->nome_fantasia;
         $banca->descricao     = $request->descricao;

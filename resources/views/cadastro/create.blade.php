@@ -1,8 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Cadastrar')
-
 @section('content')
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+            Criar Conta
+        </li>
+    </ol>
+</nav>
+
     @if($errors->any())
         <div class="alert alert-danger">
             <ul class="mb-0">
@@ -36,6 +43,18 @@
         <div class="form-group">
             <label for="email">E-mail :</label>
             <input type="email" name="email" id="email" placeholder="seu@email.com" class="form-control" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="phone">Telefone:</label>
+            <input 
+                type="text"
+                name="phone"
+                id="phone"
+                placeholder="(00) 00000-0000"
+                class="form-control"
+                value="{{ old('phone', $user->phone) }}"
+            >
         </div>
 
         <div class="form-group">

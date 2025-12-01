@@ -15,6 +15,8 @@ class Notificacao extends Model
         'banca_id',
         'evento_id',
         'produto_id',
-        'url'
+        'user_id',
+        'url',
+        'lido'
     ];
 }

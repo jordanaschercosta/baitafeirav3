@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models;
+use App\Models\Enum\TipoNotificacao;
 use Exception;
 
 class CRUDService
@@ -88,12 +89,7 @@ class CRUDService
             'nome_fantasia' => $data['nome_fantasia'],
             'foto_url'      => $data['foto_url'],
             'descricao'     => $data['descricao'],
-            'endereco'      => $data['endereco'],
-            'telefone'      => $data['telefone'],
-            'instagram'     => $data['instagram'],
-            'bairro'        => $data['bairro'],
-            'cidade'        => $data['cidade'],
-            'numero'        => $data['numero']
+            'instagram'     => $data['instagram']
         ]);
     }
 
@@ -154,17 +150,26 @@ class CRUDService
     {
         return Models\Evento::where('user_id', $user_id)
             ->where('inicio', '>', now())
-            ->get();
+            ->orderBy('inicio','asc')
+            ->paginate(6);
     }
 
-    public function getProximosEventos($user_id)
+    public function getEventosHoje()
     {
-        return Models\Evento::where('inicio', '>', now())
-            ->whereDoesntHave('participacoes', function($query) use ($user_id) {
-                $query->where('user_id', $user_id);
-            })
-            ->orderBy('inicio', 'asc')
-            ->get();
+        return Models\Evento::whereDate('inicio', now()->toDateString())->get();
+    }
+
+    public function getParticipacoesEventos($user_id)
+    {
+      return Models\Participacao::with('evento')
+        ->where('user_id', $user_id)
+        ->whereHas('evento', function ($query) {
+            $query->where('inicio', '>', now());
+        })
+        ->orderBy(Models\Evento::select('inicio')
+            ->whereColumn('eventos.id', 'participacoes.evento_id')
+        , 'asc')
+        ->paginate(6);
     }
 
     public function getEventosByLocalizacao($latitude, $longitude, $quantidade = 6) {
@@ -265,29 +270,56 @@ class CRUDService
         return $evento->delete();
     }
 
-    public function createNotificacao($obj) {
+    public function createNotificacao(string $tipo, $object, $userId) {
+
+        $titulo = "";
+        $mensagem = "";
+
+        if ($tipo == TipoNotificacao::EVENTO) {
+            $titulo = "Novo Evento confirmado!";
+            $mensagem = $object->descricao;
+            $url = route('eventos.show', $object->slug);
+        } else if ($tipo == TipoNotificacao::EVENTO_REAGENDADO) {
+            $titulo = "Alteração na data do evento.";
+            $mensagem = "O evento {$object->titulo} teve sua data de início alterada";
+            $url = route('eventos.show', $object->slug);
+        }
 
         $dataSave = [
-            'titulo' => 'Notificação Teste',
-            'mensagem' => 'Teste',
-            'banca_id' => null,
-            'url' => '',
-            'tipo' => 'teste',
-            'evento_id' => null,
-            'produto_id' => null
+            'user_id' => $userId,
+            'titulo' => $titulo,
+            'mensagem' => $mensagem,
+            'url' => $url,
+            'tipo' => $tipo
         ];
+
+        if (
+            $tipo == TipoNotificacao::EVENTO 
+            || 
+            $tipo == TipoNotificacao::EVENTO_REAGENDADO) 
+        {
+            $dataSave['evento_id'] = $object->id;
+        }
 
         return Models\Notificacao::create($dataSave);
     }
 
-    public function getNotificacoesNaoLidas($idsLidas)
+    public function getNotificacoes($naoLidas = false)
     {
-        $query = Models\Notificacao::orderBy('id', 'desc');
+        $query = Models\Notificacao::where('user_id', session('user_id'))
+            ->orderBy('id', 'desc');
 
-        if (!empty($idsLidas)) {
-            $query->whereNotIn('id', $idsLidas);
+        if ($naoLidas) {
+            $query->where('lido', false);
         }
 
         return $query->get();
+    }
+
+    public function lerNotificacoes()
+    {
+        return Models\Notificacao::where('user_id', session('user_id'))
+            ->where('lido', false)
+            ->update(['lido' => true]);
     }
 }

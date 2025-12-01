@@ -16,6 +16,8 @@ class ProdutoController extends Controller
     {
         $banca = $this->crudService->getBancaById($bancaId);
 
+        $this->validaOwner($banca);
+
         return view('produtos.index', ['banca' => $banca]);
     }
 
@@ -24,6 +26,8 @@ class ProdutoController extends Controller
      */
     public function create(Models\Banca $banca)
     {
+        $this->validaOwner($banca);
+
         return view('produtos.create', ['banca' => $banca]);
     }
 
@@ -32,6 +36,8 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validaOwner($this->crudService->getBancaById($request->banca_id));
+
         $produto = $this->crudService->createProduto([
             'banca_id'      => $request->banca_id,
             'nome'          => $request->nome,
@@ -63,6 +69,8 @@ class ProdutoController extends Controller
      */
     public function edit(Models\Banca $banca, Models\Produto $produto)
     {
+        $this->validaOwner($banca);
+
         return view('produtos.edit', ['banca' => $banca, 'produto' => $produto]);
     }
 
@@ -71,6 +79,8 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, Models\Banca $banca, Models\Produto $produto)
     {
+        $this->validaOwner($banca);
+
         $request->validate([
             'nome' => 'required',
             'descricao' => 'required',
@@ -106,6 +116,8 @@ class ProdutoController extends Controller
      */
     public function destroy(Models\Banca $banca, int $id)
     {
+        $this->validaOwner($banca);
+
         $this->crudService->deleteProduto($id);
 
         return redirect()

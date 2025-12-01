@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Enum\TipoNotificacao;
 use App\Models\Evento;
 use Exception;
 use Illuminate\Http\Request;
@@ -13,17 +14,13 @@ class EventoController extends Controller
      */
     public function index()
     {
-        $this->crudService->createNotificacao([]);
-
         if (isUserOrganizador()) {
             $proximosEventos = $this->crudService->getEventosByUser(session('user_id'));
-            return view('eventos.index_admin', compact('proximosEventos'));
+        } else {
+            $proximosEventos = $this->crudService->getParticipacoesEventos(session('user_id'));
         }
-        
-        $proximosEventos = $this->crudService->getProximosEventos(session('user_id'));
-        $participacoes = $this->crudService->getMeusEventos(session('user_id'));
 
-        return view('eventos.index', compact('proximosEventos', 'participacoes'));
+        return view('eventos.index', compact('proximosEventos'));
     }
 
     /**
@@ -85,6 +82,8 @@ class EventoController extends Controller
             }
         }
 
+        // $this->crudService->createNotificacao(TipoNotificacao::EVENTO, $evento);
+
         return redirect()->route('eventos.index')->with('success', 'Evento criado com sucesso!');
     }
 
@@ -94,6 +93,8 @@ class EventoController extends Controller
     public function show(string $slug)
     {
         $evento = $this->crudService->getEventoBySlug($slug);
+
+        // $this->notificacaoService->enviarNotificacao($evento, TipoNotificacao::EVENTO_REAGENDADO);
 
         $bancasIds = [];
 
@@ -128,6 +129,8 @@ class EventoController extends Controller
      */
     public function edit(Evento $evento)
     {
+        $this->validaOwner($evento);
+
         return view('eventos.edit', compact('evento'));
     }
 
@@ -136,6 +139,8 @@ class EventoController extends Controller
      */
     public function update(Request $request, Evento $evento)
     {
+        $this->validaOwner($evento);
+
         $request->validate([
             'inicio' => 'required|date|after_or_equal:today',
             'fim' => 'required|date|after:inicio',
@@ -153,6 +158,11 @@ class EventoController extends Controller
         if (!empty($coordenadas)) {
             $latitude = $coordenadas['latitude'];
             $longitude = $coordenadas['longitude'];
+        }
+
+        $reagendado = false;
+        if ($evento->inicio <> $request->inicio) {
+            $reagendado = true;
         }
 
         $this->crudService->atualizarEvento($evento->id, [
@@ -179,8 +189,12 @@ class EventoController extends Controller
             }
         }
 
+        if ($reagendado) {
+            // $this->crudService->createNotificacao(TipoNotificacao::EVENTO_REAGENDADO, $evento);
+        }
+
         return redirect()
-            ->route('eventos.show', $evento->slug)
+            ->route('eventos.index')
             ->with('success', 'Evento atualizado com sucesso!');
     }
 
@@ -189,6 +203,8 @@ class EventoController extends Controller
      */
     public function destroy(int $id)
     {
+        $this->validaOwner($this->crudService->getEventoById($id));
+
         $this->crudService->deleteEvento($id);
 
         return redirect()

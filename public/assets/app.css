@@ -71,4 +71,6 @@ ul.nav-inline.right {
   font-size: 8px;
 }
 section#banner {
+  width: 100%;
+  height: 28pc;
 }

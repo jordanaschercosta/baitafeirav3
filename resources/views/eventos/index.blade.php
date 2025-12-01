@@ -1,79 +1,97 @@
 @extends('layouts.app')
 
-@section('title', 'Eventos')
-
 @section('content')
 
-<h4>Meus Eventos</h4>
-@if($participacoes->isEmpty())
-    <p>Nenhum evento agendado.</p>
-@else
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Título</th>
-                <th>Início</th>
-                <th>Fim</th>
-                <th>Local</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($participacoes as $participacao)
-                <tr>
-                    <td>{{ $participacao->evento->titulo }}</td>
-                    <td>{{ $participacao->evento->inicio }}</td>
-                    <td>{{ $participacao->evento->fim }}</td>
-                    <td>{{ $participacao->evento->endereco }}</td>
-                    <td>
-                        <a href="{{ route('eventos.show', $participacao->evento->slug) }}" class="btn btn-sm btn-default">Ver mais</a>
-                        <form action="{{ route('participacoes.destroy', $participacao->id) }}" 
-                            method="POST"
-                            style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger"
-                                onclick="return confirm('Tem certeza que deseja cancelar sua presença neste evento?')">
-                                Cancelar presença
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Eventos</li>
+    </ol>
+</nav>
+
+@if (isUserOrganizador())
+    <div class="row mb-3">
+        <div class="col d-flex justify-content-end">
+            <a class="btn btn-light" href="{{ route('eventos.create') }}">
+                <i class="fas fa-calendar-plus"></i> Novo evento
+            </a>
+        </div>
+    </div>
 @endif
 
-
-<h4>Próximos Eventos</h4>
 @if($proximosEventos->isEmpty())
-    <p>Nenhum evento agendado.</p>
+    <p>Nenhum evento cadastrado.</p>
 @else
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Título</th>
-                <th>Início</th>
-                <th>Fim</th>
-                <th>Local</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($proximosEventos as $evento)
-                <tr>
-                    <td>{{ $evento->titulo }}</td>
-                    <td>{{ $evento->inicio }}</td>
-                    <td>{{ $evento->fim }}</td>
-                    <td>{{ $evento->endereco }}</td>
-                    <td>
-                        <a href="{{ route('eventos.show', $evento->slug) }}" class="btn btn-sm btn-default">Ver mais</a>
-                        <a href="{{ route('participacoes.create', ['evento' => $evento->id]) }}" class="btn btn-sm btn-default">Confirmar presença</a>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="row">
+        @foreach($proximosEventos as &$evento)
+            @php
+                $participacao = null;
+
+                if(isset($evento->evento)) {
+                    $participacao = $evento;
+                    $evento = $evento->evento;
+                }
+
+            @endphp
+      
+            <div class="col-md-4 mb-4">
+                <div class="card h-100" style="border-radius: 10px; overflow: hidden;">
+                    
+                    <!-- Imagem do evento -->
+                    @if($evento->imagem_url)
+                        <img src="{{ asset('storage/uploads/' . $evento->imagem_url) }}" 
+                             class="card-img-top" 
+                             alt="{{ $evento->titulo }}" 
+                             style="height: 180px; object-fit: cover;">
+                    @endif
+
+                    <div class="card-body d-flex flex-column">
+                        <!-- Título -->
+                        <h5 class="card-title">{{ $evento->titulo }}</h5>
+
+                        <!-- Datas -->
+                        <p class="card-text mb-1"><strong>Início:</strong> {{ $evento->inicio }}</p>
+                        <p class="card-text mb-1"><strong>Fim:</strong> {{ $evento->fim }}</p>
+
+                        <!-- Endereço -->
+                        <p class="card-text mb-3"><strong>Endereço:</strong> {{ $evento->endereco }}</p>
+
+                        <!-- Número de participantes -->
+                        <p class="card-text mb-3">
+                            <i class="fas fa-users"></i>
+                            {{ $evento->participacoes->count() }} pessoas irão comparecer
+                        </p>
+
+                        <!-- Botões -->
+                        <div class="mt-auto">
+                            <a href="{{ route('eventos.show', $evento->slug) }}" class="btn btn-sm btn-light mb-1 w-100">
+                                Exibir
+                            </a>
+                            
+                            @if (isEventOrganizador($evento->user_id))
+                                <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-sm btn-primary mb-1 w-100">
+                                    Editar
+                                </a>
+                                <form action="{{ route('eventos.destroy', $evento->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja cancelar evento?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger w-100">
+                                        Cancelar
+                                    </button>
+                                </form>
+                            @else
+                                <a href="{{ route('participacoes.edit', $participacao->id) }}" class="btn btn-sm btn-light mb-1 w-100">
+                                    Ver participação
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+    <div>
+        {{ $proximosEventos->appends(request()->query())->links('pagination::bootstrap-5') }}
+    </div>
 @endif
 
 @endsection

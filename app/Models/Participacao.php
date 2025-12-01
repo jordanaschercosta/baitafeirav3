@@ -19,6 +19,11 @@ class Participacao extends Model
 
     public $timestamps = true;
 
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
     public function evento()
     {
         return $this->belongsTo(Evento::class, 'evento_id', 'id');

@@ -36,9 +36,6 @@ class ParticipacaoController extends Controller
             return redirect()->route('eventos.show', $evento->slug)->with('success', 'Participação confirmada com sucesso!');
         }
 
-        // Busca o evento
-
-        // Busca as bancas do usuário logado
         $bancas = $this->crudService->getBancasUsuario(session('user_id'));
 
         // Retorna a view
@@ -54,6 +51,9 @@ class ParticipacaoController extends Controller
     public function edit(int $participacaoId)
     {
         $participacao = $this->crudService->getParticipacaoById($participacaoId);
+        
+        $this->validaOwner($participacao);
+
         $bancas = $this->crudService->getBancasUsuario(session('user_id'));
 
         if (!empty($bancas)) {
@@ -67,8 +67,33 @@ class ParticipacaoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'banca_id' => 'required|array|min:1',
+            'banca_id.*' => 'exists:bancas,id',
+        ], [
+            'banca_id.required' => 'Por favor, selecione pelo menos uma banca.',
+            'banca_id.min' => 'Por favor, selecione pelo menos uma banca.',
+            'banca_id.*.exists' => 'Banca inválida selecionada.',
+        ]);
+
+        $this->crudService->createParticipacaoEvento([
+            'evento_id' => $request->evento_id,
+            'user_id' => session('user_id'),
+            'bancas' => json_encode($request->banca_id)
+        ]);
+
+        return redirect()->route('eventos.index')->with('success', 'Participação confirmada com sucesso!');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
     public function update(Request $request, int $id)
     {
+        $this->validaOwner($this->crudService->getParticipacaoById($id));
+
         $request->validate([
             'banca_id' => 'required|array|min:1',
             'banca_id.*' => 'exists:bancas,id',
@@ -87,33 +112,12 @@ class ParticipacaoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'banca_id' => 'required|array|min:1', // obrigatório e pelo menos 1 item
-            'banca_id.*' => 'exists:bancas,id',   // cada item deve existir na tabela 'bancas'
-        ], [
-            'banca_id.required' => 'Por favor, selecione pelo menos uma banca.',
-            'banca_id.min' => 'Por favor, selecione pelo menos uma banca.',
-            'banca_id.*.exists' => 'Banca inválida selecionada.',
-        ]);
-
-        $this->crudService->createParticipacaoEvento([
-            'evento_id' => $request->evento_id,
-            'user_id' => session('user_id'),
-            'bancas' => json_encode($request->banca_id)
-        ]);
-
-        return redirect()->route('eventos.index')->with('success', 'Participação confirmada com sucesso!');
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
     public function destroy(int $participacaoId)
     {
+        $this->validaOwner($this->crudService->getParticipacaoById($id));
+
         try {
             $this->crudService->removerParticipacao([
                 'id' => $participacaoId,

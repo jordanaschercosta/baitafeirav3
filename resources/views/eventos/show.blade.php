@@ -26,7 +26,7 @@
 @else
     @if (session('user_id'))
         @if (empty($participacao))
-            <a href="{{ route('participacoes.create', ['evento' => $evento->id]) }}" class="float-end btn btn-primary">Tenho interesse</a>
+            <a href="{{ route('participacoes.create', ['evento' => $evento->id]) }}" class="float-end btn btn-primary">Quero Participar</a>
         @else
             @if(isUserExpositor())
                 <a href="{{ route('participacoes.edit', $participacao->id ) }}" class="float-end btn btn-primary">Ver participação</a>
@@ -58,8 +58,6 @@
     <strong>Descrição</strong><br>
     {{ $evento->descricao }}
 </p>
-
-<p><strong>Local:</strong> {{ $evento->endereco }}</p>
 
 <h4>Bancas Participantes</h4>
 <div class="row">

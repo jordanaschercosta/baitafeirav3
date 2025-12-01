@@ -9,6 +9,11 @@ use Exception;
 class UserService
 {
     protected $emailService;
+    
+    public function getUserById($id)
+    {
+        return User::where("id", $id)->firstOrFail();
+    }
 
     public function __construct(EmailService $emailService)
     {
@@ -21,7 +26,8 @@ class UserService
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'tipo' => $data['tipo']
+            'tipo' => $data['tipo'],
+            'phone' => $data['phone']
         ]);
     }
 

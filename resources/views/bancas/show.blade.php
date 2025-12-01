@@ -17,7 +17,7 @@
     </ol>
 </nav>
 
-@if (!isUserDonoBanca($banca->user_id))
+@if (!isUserDonoBanca($banca->user_id) && !isUserOrganizador())
     <div class="row">
         <div class="col-md-3 ms-auto">
             @if ($favorito)

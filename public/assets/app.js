@@ -2618,12 +2618,18 @@
   // resources/js/app.js
   async function checarNotificacoes() {
     try {
-      const response = await fetch("/notificacoes");
+      const response = await fetch("/notificacoes/nao_lidas");
       if (!response.ok) {
         throw new Error("Erro ao buscar notifica\xE7\xF5es");
       }
       const dados = await response.json();
       if (dados.data.length > 0) {
+        const alert_has_notifications = document.getElementById("alert-has-notifications");
+        const alert_no_notifications = document.getElementById("alert-no-notifications");
+        if (alert_has_notifications) {
+          alert_has_notifications.style.display = "block";
+          alert_no_notifications.style.display = "none";
+        }
         document.getElementById("notification-badge").style.display = "inline-block";
         document.getElementById("notification-badge").innerHTML = dados.data.length;
       } else {
@@ -2637,26 +2643,6 @@
     checarNotificacoes();
     setInterval(checarNotificacoes, 2e4);
   }, 100);
-  async function lerNotificacoes() {
-    const response = await fetch("/notificacoes/lido");
-    if (!response.ok) {
-      throw new Error("Erro ao buscar notifica\xE7\xF5es");
-    }
-    const dropdown = document.getElementById("notification-dropdown");
-    const a = document.createElement("a");
-    a.classList.add("dropdown-item");
-    a.href = "#";
-    a.textContent = "Nenhuma notifica\xE7\xE3o";
-    dropdown.appendChild(a);
-    document.getElementById("notification-badge").style.display = "none";
-    document.getElementById("notification-badge").innerHTML = "";
-  }
-  var dropdown_link = document.getElementById("notification-dropdown-link");
-  if (dropdown_link) {
-    dropdown_link.addEventListener("click", () => {
-      lerNotificacoes();
-    });
-  }
   var image = document.getElementById("preview");
   var cropper;
   if (image) {
@@ -2745,5 +2731,20 @@
   if (check) {
     check.addEventListener("change", toggleValorNovo);
     toggleValorNovo();
+  }
+  var phoneInput = document.getElementById("phone");
+  if (phoneInput) {
+    phoneInput.addEventListener("input", function(e) {
+      let v = e.target.value.replace(/\D/g, "");
+      v = v.substring(0, 11);
+      if (v.length <= 10) {
+        v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+        v = v.replace(/(\d{4})(\d)/, "$1-$2");
+      } else {
+        v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+        v = v.replace(/(\d{5})(\d)/, "$1-$2");
+      }
+      e.target.value = v;
+    });
   }
 })();
