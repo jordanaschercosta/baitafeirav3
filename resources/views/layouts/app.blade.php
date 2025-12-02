@@ -41,7 +41,7 @@
                                             <span id="notification-badge" style="display: none" class="badge bg-primary-subtle text-primary-emphasis rounded-pill badge-fix"></span>
                                         </a>
                                     </li>
-                                    <li><a class="nav-link" href="{{ route('eventos.index') }}"><i class="far fa-calendar"></i> Eventos</a></li>
+                                    <li><a class="nav-link" href="{{ route('eventos.index') }}"><i class="far fa-calendar"></i> Meus Eventos</a></li>
                                     @if (!isUserOrganizador())
                                         <li><a class="nav-link" href="{{ route('favoritos.index') }}"><i class="far fa-heart"></i> Favoritos</a></li>
                                     @endif

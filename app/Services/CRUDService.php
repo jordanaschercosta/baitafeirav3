@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models;
+use App\Models\Enum\StatusEvento;
 use App\Models\Enum\TipoNotificacao;
 use Exception;
 
@@ -61,10 +62,24 @@ class CRUDService
         return $produto->delete();
     }
 
-    public function getBancasUsuario(int $user_id) 
+    public function getBancasUsuario(int $user_id, $banca_id = null) 
     {
-        return Models\Banca::where('user_id', $user_id)->get();
+        return Models\Banca::where('user_id', $user_id)
+            ->when($banca_id, function ($query) use ($banca_id) {
+                $query->where('id', '!=', $banca_id);
+            })
+            ->get();
     }
+
+    public function getParticipacoesEventosByBanca(int $banca_id)
+    {
+        return Models\Participacao::whereJsonContains('bancas', (string) $banca_id)
+            ->with('evento')
+            ->get()
+            ->pluck('evento')
+            ->filter(); // Remove possíveis nulls
+    }
+
 
     public function getBancaById(int $id) 
     {
@@ -187,6 +202,7 @@ class CRUDService
                 $longitude, 
                 $latitude
             ])
+        ->where('inicio', '>', now())
         ->orderBy('distancia', 'asc')
         ->paginate($quantidade);
     }
@@ -201,7 +217,7 @@ class CRUDService
     public function getMeusEventos($user_id)
     {
         return Models\Participacao::where('user_id', $user_id)
-             ->whereHas('evento', function($query) {
+            ->whereHas('evento', function($query) {
                 $query->where('inicio', '>', now());
             })
             ->with('evento')
@@ -270,36 +286,63 @@ class CRUDService
         return $evento->delete();
     }
 
-    public function createNotificacao(string $tipo, $object, $userId) {
+    public function cancelaEvento($id) {
+        $evento = Models\Evento::find($id);
 
+        if (!$evento) {
+            return false;
+        }
+
+        Models\Participacao::where('evento_id', $evento->id)->delete();
+
+        $evento->status = StatusEvento::CANCELADO;
+        $evento->save();
+    }
+    
+    public function createNotificacao(string $tipo, $object, Models\User $destinario) 
+    {
         $titulo = "";
         $mensagem = "";
+
+        if (!empty($object['favorito']->banca)) {
+            $banca = $object['favorito']->banca;
+        }
+
+        if (!empty($object['participacao']->evento)) {
+            $object = $object['participacao']->evento;
+        }
+
+        $url = route('eventos.show', $object->slug);
 
         if ($tipo == TipoNotificacao::EVENTO) {
             $titulo = "Novo Evento confirmado!";
             $mensagem = $object->descricao;
-            $url = route('eventos.show', $object->slug);
         } else if ($tipo == TipoNotificacao::EVENTO_REAGENDADO) {
             $titulo = "Alteração na data do evento.";
             $mensagem = "O evento {$object->titulo} teve sua data de início alterada";
-            $url = route('eventos.show', $object->slug);
+        } else if ($tipo == TipoNotificacao::EVENTO_CANCELADO) {
+            $titulo = "Cancelamento de evento.";
+            $mensagem = "O evento {$object->titulo} foi cancelado pelo organizador.";
+        } else if ($tipo == TipoNotificacao::EVENTO_LEMBRETE) {
+            $titulo = "Você tem evento hoje!";
+            $mensagem = "O evento {$object->titulo} será dia {$object->inicio}";
+        } else if ($tipo == TipoNotificacao::FAVORITO_EVENTO) {            
+            $titulo = "Participação de Banca Favorita!";
+            $mensagem = "Sua banca favorita {$banca->nome_fantasia} confirmou presença no evento:\n"
+                . "{$object->titulo}\n"
+                . "em {$object->inicio}.\n\n"
+                . "Confirme sua presença e apoie o comércio local.";
         }
 
         $dataSave = [
-            'user_id' => $userId,
+            'user_id' => $destinario->id,
             'titulo' => $titulo,
             'mensagem' => $mensagem,
             'url' => $url,
             'tipo' => $tipo
         ];
 
-        if (
-            $tipo == TipoNotificacao::EVENTO 
-            || 
-            $tipo == TipoNotificacao::EVENTO_REAGENDADO) 
-        {
-            $dataSave['evento_id'] = $object->id;
-        }
+        $dataSave['evento_id'] = $object->id;
 
         return Models\Notificacao::create($dataSave);
     }
@@ -322,4 +365,9 @@ class CRUDService
             ->where('lido', false)
             ->update(['lido' => true]);
     }
+
+    public function getFavoritadoByBancaId($bancaId)
+    {
+        return Models\Favorito::where('banca_id', $bancaId)->get();
+    }   
 }

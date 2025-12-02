@@ -69,14 +69,16 @@ class BancaController extends Controller
                 ->first();
         }
 
-        // $banner = asset('images/banners/banca.jpg');
-
         $evento = null;
         if (request()->has('evento')) {
             $evento = Evento::find(request()->evento);
         }
 
-        return view('bancas.show', compact('banca', 'evento', 'favorito'));
+        $bancas = $this->crudService->getBancasUsuario($banca->user->id, $banca->id);
+
+        $eventos = $this->crudService->getParticipacoesEventosByBanca($banca->id);
+
+        return view('bancas.show', compact('banca', 'bancas', 'evento', 'eventos', 'favorito'));
     }
 
    /**

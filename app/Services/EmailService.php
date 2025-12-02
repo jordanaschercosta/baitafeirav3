@@ -6,6 +6,8 @@ use App\Models;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EsqueciSenhaMail;
+use App\Mail\LembreteEventoMail;
+use Exception;
 use Throwable;
 
 class EmailService
@@ -16,7 +18,16 @@ class EmailService
 
         try {
             Mail::to($user->email)->send(new EsqueciSenhaMail($user->name, $link));
-        } catch (Throwable $throwable) {
+        } catch (Exception $exception) {
+            //
+        }
+    }
+
+    public function eventoLembrete(Models\User $user, Models\Evento $evento)
+    {
+        try {
+            Mail::to($user->email)->send(new LembreteEventoMail($user->name, $evento));
+        } catch (Exception $exception) {
             //
         }
     }

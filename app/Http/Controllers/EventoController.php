@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Enum\StatusEvento;
 use App\Models\Enum\TipoNotificacao;
 use App\Models\Evento;
 use Exception;
@@ -61,7 +62,7 @@ class EventoController extends Controller
             'inicio' => $request->inicio,
             'fim' => $request->fim,
             'descricao' => $request->descricao,
-            'status' => 'Confirmado',
+            'status' => StatusEvento::CONFIRMADO,
             'user_id' => session('user_id'),
             'cep' => $request->cep,
             'rua' => $request->rua,
@@ -94,8 +95,6 @@ class EventoController extends Controller
     {
         $evento = $this->crudService->getEventoBySlug($slug);
 
-        // $this->notificacaoService->enviarNotificacao($evento, TipoNotificacao::EVENTO_REAGENDADO);
-
         $bancasIds = [];
 
         foreach ($evento->participacoes as $participacao) {
@@ -107,6 +106,8 @@ class EventoController extends Controller
                 $bancasIds[] = $banca;
             }
         }
+
+        $bancasIds = array_values(array_unique($bancasIds));
 
         $listaBancas = [];
         foreach ($bancasIds as $bancaId) {
@@ -203,10 +204,15 @@ class EventoController extends Controller
      */
     public function destroy(int $id)
     {
+        $evento = $this->crudService->getEventoById($id);
+
         $this->validaOwner($this->crudService->getEventoById($id));
 
-        $this->crudService->deleteEvento($id);
+        $this->notificacaoService->enviarNotificacao($evento, TipoNotificacao::EVENTO_CANCELADO);
 
+        $this->crudService->cancelaEvento($id);
+
+        exit;
         return redirect()
             ->route('eventos.index')
             ->with('success', 'Evento cancelado com sucesso!');

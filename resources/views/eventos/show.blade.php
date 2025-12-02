@@ -1,3 +1,7 @@
+@php
+    use App\Models\Enum\StatusEvento;
+@endphp
+
 @extends('layouts.app')
 
 @section('title', 'Evento')
@@ -16,37 +20,53 @@
 <div class="banner">
     <img style="width: 100%; margin-bottom: 1.2pc;" src="{{ asset('storage/uploads/' . $evento->imagem_url) }}">
 </div>
+@if ($evento->status == StatusEvento::CONFIRMADO)
+    @if (isEventOrganizador($evento->user->id))
+        <form action="{{ route('eventos.destroy', $evento->id) }}"
+            method="POST"
+            class="float-end"
+            style="display:inline;">
 
-@if (isEventOrganizador($evento->user->id))
-    <form action="{{ route('eventos.destroy', $evento->id) }}" method="POST" class="float-end" onsubmit="return confirm('Tem certeza que deseja cancelar?')">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger">Cancelar</button>
-    </form>
-@else
-    @if (session('user_id'))
-        @if (empty($participacao))
-            <a href="{{ route('participacoes.create', ['evento' => $evento->id]) }}" class="float-end btn btn-primary">Quero Participar</a>
-        @else
-            @if(isUserExpositor())
-                <a href="{{ route('participacoes.edit', $participacao->id ) }}" class="float-end btn btn-primary">Ver participação</a>
-            @else
-                <form action="{{ route('participacoes.destroy', $participacao->id) }}" 
-                    method="POST"
-                    class="float-end"
-                    style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-danger"
-                        onclick="return confirm('Tem certeza que deseja cancelar participação?')">
-                        Cancelar
-                    </button>
-                </form>
-            @endif            
-        @endif
+            @csrf
+            @method('DELETE')
+
+            <button type="submit"
+                class="btn btn-danger"
+                onclick="return confirm('Tem certeza que deseja cancelar o evento?')">
+                <i class="fa-solid fa-calendar-xmark"></i>
+                Cancelar Evento
+            </button>
+        </form>
     @else
-        <a href="{{ route('participacoes.create', ['evento' => $evento->id, 'redirect' => url()->current() ]) }}" class="float-end btn btn-primary">Tenho interesse</a>
+        @if (session('user_id'))
+            @if (empty($participacao))
+                <a href="{{ route('participacoes.create', ['evento' => $evento->id]) }}" class="float-end btn btn-primary"><i class="fa-solid fa-calendar-check"></i> Quero Participar</a>
+            @else
+                @if(isUserExpositor())
+                    <a href="{{ route('participacoes.edit', $participacao->id ) }}" class="float-end btn btn-primary">Ver participação</a>
+                @else
+                    <form action="{{ route('participacoes.destroy', $participacao->id) }}" 
+                        method="POST"
+                        class="float-end"
+                        style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('Tem certeza que deseja cancelar participação?')">
+                            <i class="fa-solid fa-calendar-xmark"></i> Cancelar Participação
+                        </button>
+                    </form>
+                @endif            
+            @endif
+        @else
+            <a href="{{ route('participacoes.create', ['evento' => $evento->id, 'redirect' => url()->current() ]) }}" class="float-end btn btn-primary"><i class="fa-solid fa-calendar-check"></i> Quero Participar</a>
+        @endif
     @endif
+@else
+    <span class="float-end text-danger fw-bold">
+        <i class="fa-solid fa-calendar-xmark"></i>
+        Evento Cancelado
+    </span>
 @endif
 
 <h3>{{ $evento->titulo }}</h3>

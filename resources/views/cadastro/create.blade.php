@@ -53,7 +53,6 @@
                 id="phone"
                 placeholder="(00) 00000-0000"
                 class="form-control"
-                value="{{ old('phone', $user->phone) }}"
             >
         </div>
 

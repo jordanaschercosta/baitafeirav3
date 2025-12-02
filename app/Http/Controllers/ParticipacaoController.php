@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Categoria;
+use App\Models\Enum\TipoNotificacao;
 use App\Models\Participacao;
 use Exception;
 
@@ -51,7 +52,7 @@ class ParticipacaoController extends Controller
     public function edit(int $participacaoId)
     {
         $participacao = $this->crudService->getParticipacaoById($participacaoId);
-        
+    
         $this->validaOwner($participacao);
 
         $bancas = $this->crudService->getBancasUsuario(session('user_id'));
@@ -78,11 +79,13 @@ class ParticipacaoController extends Controller
             'banca_id.*.exists' => 'Banca inválida selecionada.',
         ]);
 
-        $this->crudService->createParticipacaoEvento([
+        $participacao = $this->crudService->createParticipacaoEvento([
             'evento_id' => $request->evento_id,
             'user_id' => session('user_id'),
             'bancas' => json_encode($request->banca_id)
         ]);
+
+        $this->notificacaoService->enviarNotificacao($participacao, TipoNotificacao::FAVORITO_EVENTO);
 
         return redirect()->route('eventos.index')->with('success', 'Participação confirmada com sucesso!');
     }
@@ -93,7 +96,7 @@ class ParticipacaoController extends Controller
     public function update(Request $request, int $id)
     {
         $this->validaOwner($this->crudService->getParticipacaoById($id));
-
+        
         $request->validate([
             'banca_id' => 'required|array|min:1',
             'banca_id.*' => 'exists:bancas,id',
@@ -103,11 +106,11 @@ class ParticipacaoController extends Controller
             'banca_id.min' => 'Por favor, selecione pelo menos uma banca.',
             'banca_id.*.exists' => 'Banca inválida selecionada.',
         ]);
-
+        
         $this->crudService->atualizarParticipacao($id, [
             'bancas' => json_encode($request->banca_id)
         ]);
-
+ 
         return redirect()->route('participacoes.edit', $id)->with('success', 'Participação atualizada com sucesso!');
     }
 
@@ -116,7 +119,7 @@ class ParticipacaoController extends Controller
      */
     public function destroy(int $participacaoId)
     {
-        $this->validaOwner($this->crudService->getParticipacaoById($id));
+        $this->validaOwner($this->crudService->getParticipacaoById($participacaoId));
 
         try {
             $this->crudService->removerParticipacao([

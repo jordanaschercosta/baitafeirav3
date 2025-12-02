@@ -3,33 +3,145 @@
 namespace App\Services;
 
 use App\Models;
+use App\Models\Enum\TipoNotificacao;
+use Exception;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Twilio\Rest\Client;
 
 class NotificacaoService
 {
-    protected $crudService;
+    protected CRUDService $crudService;
+    protected EmailService $emailService;
 
-    public function __construct(CRUDService $crudService)
+    public function __construct(CRUDService $crudService, EmailService $emailService)
     {
         $this->crudService = $crudService;
+        $this->emailService = $emailService;
     }
 
     public function enviarNotificacao($obj, string $tipo)
     {
         $destinatarios = $this->getListaTransmissao($obj);
 
-        foreach ($destinatarios as $userId) {
-            $this->crudService->createNotificacao($tipo, $obj, $userId);
+        /** @var \App\Models\User[] $destinatarios */
+        foreach ($destinatarios as $destinario) {
+
+            if ($destinario instanceof \App\Models\Favorito) {
+
+                $obj = [
+                    'favorito' => $destinario,
+                    'participacao' => $obj
+                ];
+
+                $destinario = $destinario->user;
+            }
+
+            try {
+                $this->crudService->createNotificacao($tipo, $obj, $destinario);
+                $this->enviarWPMessage($obj, $tipo, $destinario->phone);
+            } catch (Exception $exception) {
+                var_dump($exception->getMessage());
+            }
         }
     }
 
-    protected function getListaTransmissao($obj) {
-        $user_ids = [];
+    /**
+      * @param mixed $obj
+      * @return array
+    */
+    protected function getListaTransmissao($obj) : array
+    {
+        $users = [];
+
         if ($obj instanceof Models\Evento) {
             foreach ($obj->participacoes as $participacao) {
-                $user_ids[] = $participacao->usuario->id; 
+                $users[] = $participacao->usuario; 
             }
         }
 
-        return $user_ids;
+        if ($obj instanceof Models\Participacao) {
+            $bancasFavoritados = [];
+            if (!empty($obj->bancas)) {
+                $bancasIds = json_decode($obj->bancas);
+                foreach ($bancasIds as $bancaId) {
+                    $favoritados = $this->crudService->getFavoritadoByBancaId($bancaId);
+                    foreach($favoritados as $favoritado) {
+                        $bancasFavoritados[] = $favoritado;
+                    }
+                }
+
+                return $bancasFavoritados;
+            }
+        }
+
+        return $users;
+    }
+
+    protected function enviarWPMessage($obj, $tipo, $phone) 
+    {
+        $sid   = 'ACc40b4f3f624bc5abdb0c4a11209be967';
+        $token = 'a6d21a5505d7d82aec4bee20b7492c2d';
+        $from  = 'whatsapp:+14155238886';
+
+        $phone = preg_replace('/\D/', '', $phone);
+
+        // envio teste
+        $phone = '555196363031';
+
+        $to = "whatsapp:+{$phone}";
+
+        try {
+
+            $twilio = new Client($sid, $token);
+
+            $twilio->messages->create($to, [
+                'from' => $from,
+                'body' => $this->montarMensagem($obj, $tipo)
+            ]);
+
+            return true;
+
+        } catch (\Exception $e) {
+
+            var_dump($e->getMessage());
+            exit;
+            Log::error('Erro ao enviar WhatsApp', [
+                'to'    => $to,
+                'error' => $e->getMessage()
+            ]);
+
+            return false;
+        }
+
+    }
+
+    protected function montarMensagem($obj, $tipo)
+    {
+        if ($tipo == TipoNotificacao::EVENTO_LEMBRETE) {
+            return "*BAITA-FEIRA AVISA*\n\n"
+                . "📅 *Você tem um evento marcado para hoje!*\n\n"
+                . "🎉 {$obj->titulo}\n"
+                . "📍 {$obj->endereco}\n"
+                . "⏰ {$obj->inicio}\n\n"
+                . "👉 Ver detalhes do evento:\n"
+                . route("eventos.show", $obj->slug);
+        } else if ($tipo == TipoNotificacao::EVENTO_CANCELADO) {
+            return "*BAITA-FEIRA AVISA*\n\n"
+                . "📅❌ * O evento {$obj->titulo} foi cancelado!*\n\n"
+                . "👉 Ver detalhes em:\n"
+                . route("eventos.show", $obj->slug);
+        } else if ($tipo == TipoNotificacao::FAVORITO_EVENTO) {
+            $banca = $obj['favorito']->banca;
+            $obj = $obj['participacao']->evento;
+
+            return "*BAITA-FEIRA AVISA*\n\n"
+                . "📅 *Sua banca favorita {$banca->nome_fantasia} estará presente!*\n\n"
+                . "🎉 Evento: {$obj->titulo}\n\n"
+                . "👉 Ver detalhes em:\n"
+                . route("eventos.show", $obj->slug);
+        }
+
+        return "";
     }
 }

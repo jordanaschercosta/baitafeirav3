@@ -1,4 +1,3 @@
-autorize apenas para organziador do evento alterar evento
-paginação em eventos index
-notificacao vincular ao usuario ( quando gerar notificacao de evento remarcado, envia apenas aos usuarios que irão participar)
-
+bancas show exibir icons de email e telefone do expositor da banca 
+exibir outras bancas do mesmo expositor 
+exibir eventos que a banca estará

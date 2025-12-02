@@ -17,6 +17,12 @@ class Notificacao extends Model
         'produto_id',
         'user_id',
         'url',
-        'lido'
+        'lido',
+        'mensagem'
     ];
+
+    public function evento()
+    {
+        return $this->belongsTo(Evento::class, 'evento_id', 'id');
+    }
 }

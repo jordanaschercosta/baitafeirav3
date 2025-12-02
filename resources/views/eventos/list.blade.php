@@ -1,4 +1,6 @@
-
+@php
+    use App\Models\Enum\StatusEvento;
+@endphp
 
 <div class="row">
     <div class="col-md-6">
@@ -32,14 +34,49 @@
                 <div class="thumbnail">
                     <img style="max-width: 100%;" src="{{ asset('storage/uploads/' . $evento->imagem_url) }}">
                 </div>
-                <h5>{{ $evento->titulo }}</h5>
-                <p><i class="fas fa-calendar"></i> {{ $evento->inicio }}</p>
-                <p><i class="fas fa-map-marker-alt"></i> {{ $evento->endereco }}</p>
+
+                <h5 class="d-flex align-items-center gap-2">
+                    @if($evento->status == StatusEvento::CANCELADO)
+                        <span style="text-decoration: line-through; color: red;">
+                            {{ $evento->titulo }}
+                        </span>
+                        <span class="text-danger" style="font-size: 0.8rem;">
+                            (Evento cancelado)
+                        </span>
+                    @else
+                        {{ $evento->titulo }}
+                    @endif
+                </h5>
+
+                {{-- DATA --}}
+                <p>
+                    @if($evento->status == StatusEvento::CANCELADO)
+                        <span class="text-danger">
+                            <i class="fas fa-calendar-times"></i>
+                            {{ $evento->inicio }}
+                        </span>
+                    @else
+                        <i class="fas fa-calendar"></i>
+                        {{ $evento->inicio }}
+                    @endif
+                </p>
+
+                <p>
+                    <i class="fas fa-map-marker-alt"></i> {{ $evento->endereco }}
+                </p>
+
                 @if(isset($evento->distancia))
-                    <p><small><i class="fas fa-route"></i> {{ round($evento->distancia, 2) }} km</small></p>
+                    <p>
+                        <small>
+                            <i class="fas fa-route"></i>
+                            {{ round($evento->distancia, 2) }} km
+                        </small>
+                    </p>
                 @endif
+
             </a>
         </div>
+
     @endforeach
 </div>
 

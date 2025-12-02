@@ -42,12 +42,31 @@
     </div>
 @endif
 
-<div clas="row">
-    <div class="col-md-4">
-        <img src="{{ asset('storage/uploads/' . $banca->foto_url) }}">
+<div class="row align-items-center">
+    <div class="col-md-3 mb-3">
+        <img 
+            src="{{ asset('storage/uploads/' . $banca->foto_url) }}"
+            class="img-fluid rounded"
+            style="max-width: 250px;"
+            alt="{{ $banca->nome_fantasia }}"
+        >
     </div>
-    <div class="col-md-8">
-        <p>{{ $banca->descricao }}</p>
+
+    <div class="col-md-7">
+        <p style="font-size:14px;">
+            <i class="fas fa-align-left text-secondary"></i>
+            {{ $banca->descricao }}
+        </p>
+
+        @if($banca->instagram)
+            <p class="mt-2">
+                <i class="fab fa-instagram text-danger"></i>
+                <a href="https://instagram.com/{{ ltrim($banca->instagram, '@') }}"
+                target="_blank">
+                    {{ '@' . ltrim($banca->instagram, '@') }}
+                </a>
+            </p>
+        @endif
     </div>
 </div>
 
@@ -78,6 +97,74 @@
     </div>
 @else
     <p class="text-center">Nenhum produto cadastrado</p>
+@endif
+
+@include("eventos.list", ['proximosEventos' => $eventos, "paginacao" => false])
+
+{{-- BANCAS EXPOSITOR --}}
+@if(!$bancas->isEmpty())
+    <h4 class="mb-3">Bancas deste expositor</h4>
+
+    <div class="row">
+        @foreach($bancas as $banca)
+            <div class="col-md-3 mb-4">
+                <div class="card item-card d-flex flex-column h-100"
+                     style="border-radius: 10px; overflow: hidden; cursor: pointer;">
+
+                    {{-- Imagem --}}
+                    <img 
+                        src="{{ asset('storage/uploads/' . $banca->foto_url) }}"
+                        class="card-img-top"
+                        alt="{{ $banca->nome_fantasia }}"
+                        style="height: 180px; object-fit: cover;"
+                    >
+
+                    <div class="card-body d-flex flex-column">
+
+                        {{-- Nome --}}
+                        <h5 class="card-title">
+                            {{ $banca->nome_fantasia }}
+                        </h5>
+
+                        {{-- Categoria --}}
+                        <p class="card-text mb-1" style="font-size:14px;">
+                            {{ $banca->categoria?->nome ?? 'Sem categoria' }}
+                        </p>
+
+                        {{-- Instagram --}}
+                        <p class="card-text" style="font-size:14px;">
+                            @if($banca->instagram)
+                                <i class="fab fa-instagram"></i>
+                                <a href="https://instagram.com/{{ ltrim($banca->instagram, '@') }}"
+                                   target="_blank">
+                                    {{ '@' . ltrim($banca->instagram, '@') }}
+                                </a>
+                            @else
+                                <span class="text-muted">
+                                    Sem Instagram
+                                </span>
+                            @endif
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+@endif
+
+<h4>Contato</h4>
+{{-- INFOS EXPOSITOR --}}
+<p class="mb-1">
+    <i class="fas fa-envelope"></i>
+    <b>Email:</b> {{ $banca->user->email }}
+</p>
+
+@if(!empty($banca->user->phone))
+<p class="mb-1">
+    <i class="fas fa-phone"></i>
+    <b>Telefone:</b> {{ $banca->user->phone }}
+</p>
 @endif
 
 @endsection

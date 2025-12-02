@@ -24,6 +24,10 @@ class Autorize
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if ($request->route()?->getActionMethod() === 'show') {
+            return $next($request);
+        }
+    
         if (empty($this->authenticationService->getSession()[0])) {
             return redirect()->route('login')->with('error', 'Entre novamente');
         }
