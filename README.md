@@ -85,13 +85,11 @@ Tecnologia utilizadas no Baita Feira, abaixo:
 
 Diagrama de Fluxo Arquitetural, abaixo:
 
-![Texto alternativo](./resources/imagem/diagramadefluxobaitafeira.jpg)
 
-
-Descrição da Solução
 O Baita Feira consiste em uma plataforma web desenvolvida em Laravel (PHP), com interface responsiva construída em HTML, CSS, Bootstrap e JavaScript, utilizando MySQL como banco de dados e hospedagem na Hostinguer.
 Para os recursos de localização, o sistema utiliza o Leaflet integrado ao OpenStreetMap (OSM), permitindo exibir mapas e marcar o local dos eventos de forma totalmente gratuita. A latitude e longitude são processadas pelo próprio Leaflet, enquanto o preenchimento automático do endereço do organizador é obtido por meio da API gratuita ViaCEP, que retorna informações completas a partir do CEP informado.
 Além disso, o sistema conta com ferramentas internas para organização de eventos, gerenciamento de bancas, controle de participantes e divulgação das feiras, tornando o processo mais ágil e acessível para organizadores, expositores e consumidores. A plataforma tem como finalidade centralizar informações sobre feiras , conectando microempreendedores e o público interessado em novidades locais.
+![Texto alternativo](./resources/imagem/diagramadefluxobaitafeira.jpg)
 
 ## Para Expositores
 A plataforma disponibiliza recursos para que os expositores possam:
@@ -165,8 +163,7 @@ Camada de Modelo (Model— Banco de Dados): representa dados e regras de negóci
 
 Essa arquitetura permite que o Baita Feira seja uma plataforma dinâmica e adaptável, facilitando o desenvolvimento contínuo e a integração de novas funcionalidades.
 
-![Texto alternativo](./resources/imagens/arquitetura.jpg)
-
+<!-- ![Texto alternativo](./resources/imagens/ -->
 
 Devem ser realizados no mínimo 5 artefatos.
 
@@ -180,61 +177,41 @@ O objetivo da análise foi identificar quais recursos essas plataformas oferecem
 
 A comparação, apresentada na tabela do estudo, evidencia que:
 
-* Nenhuma das plataformas analisadas oferece cupons de desconto,funcionalidade presente no Baita Feira e que incentiva o consumo, atrai clientes e fortalece o engajamento.
+Todas as plataformas disponibilizam informações básicas como data, horário e local dos eventos, o que é essencial para a divulgação.
+Não apresentam outras datas futuras do mesmo evento ou da mesma feira, dificultando o planejamento dos consumidores que desejam se organizar com antecedência.
+Nenhuma mostra claramente os expositores confirmados para cada evento, limitando a visibilidade dos expositores e impedindo que o público saiba previamente quais marcas estarão presentes.
+![Texto alternativo](./resources/imagens/sistemacorrelatos.jpg)
 
-* Todas as plataformas disponibilizam informações básicas como data, horário e local dos eventos, o que é essencial para a divulgação.
-
-* Não apresentam outras datas futuras do mesmo evento ou da mesma feira, dificultando o planejamento dos consumidores que desejam se organizar com antecedência.
-
-* Nenhuma mostra claramente os expositores confirmados para cada evento, limitando a visibilidade dos expositores e impedindo que o público saiba previamente quais marcas estarão presentes.
-
-* Benchmarking (tabela comparativa):
-
-![Texto alternativo](./resources/imagem/sistemacorrelatos.jpg)
-
-* MVP CANVA com as Personas
-![Texto alternativo](./resources/imagem/mvp%20do%20baita%20feira%20certo.jpg)
 
 * Casos de uso :
   
-![Texto alternativo](./resources/imagem/diagrama%20de%20caso%20de%20uso%20funcionalidades.jpg)
+![Texto alternativo](./resources/imagens/diagramadecasodeuso.jpg)
 
 ## Protótipos
+## Funcionalidades para Clientes
+Nos protótipos voltados aos consumidores, foram destacadas funcionalidades que aumentam a praticidade no uso da plataforma e facilitam o engajamento com os expositores:
 
-Para a criação dos protótipos da aplicação, foi utilizado o Figma, ferramenta que permite desenvolver interfaces de alta fidelidade de forma interativa e visualmente clara.
+* Favoritar bancas: permite que o usuário acompanhe bancas de interesse e receba informações sobre evento daquela feira caso não tenha participado e ao favoritar um produto ele
+* Visualização de eventos: possibilita saber quando e onde ocorrerão os eventos das marcas favoritas, possibilitar o cadastro e a divulgação de produtos, promoções de cada banca.
 
-Nos protótipos voltados para os clientes, foram destacadas funcionalidades que proporcionam maior praticidade e engajamento com os microempreendedores:
+![Texto alternativo](./resources/imagens/telafigmacliente.jpg)
 
-* Favoritar marcas: O cliente pode selecionar as marcas que mais gosta, permitindo que acompanhe eventos e promoções relacionadas a essas marcas.
+Nos protótipos destinados aos organizadores de feiras, foram destacadas funcionalidades que facilitam a criação e divulgação dos eventos:
 
-* Visualização de eventos: É possível verificar quando e onde os eventos das marcas favoritas acontecem, facilitando o planejamento da participação.
+* Criação e edição de feiras: o organizador pode cadastrar novos eventos, informando nome da feira, descrição, datas, horários e endereço, com integração às APIs de localização para geolocalização automático.
+* Atualização de informações: permite editar conteúdos já cadastrados, como textos, imagens e demais dados relacionados à feira.
+* Divulgação dos eventos: possibilita manter a página do evento sempre atualizada, facilitando o acesso dos consumidores a informações completas e confiáveis.
+* Notificações: envio automatizado de avisos aos usuários sobre novas feiras, alterações de data ou local e comunicados gerais por meio do sistema de notificações e integração com o WhatsApp (Twilio).
 
-* Filtragem por categoria: Os clientes podem buscar marcas por categoria, tornando a navegação mais rápida e direcionada.
+![Texto alternativo](./resources/imagens/figmaorganizadordoevento.jpg)
 
-* Uso de cupons de desconto: Durante os eventos, os clientes podem utilizar cupons das marcas que favoritaram, incentivando a interação e a fidelização com os microempreendedores.
+Foram incluídas funcionalidades que apoiam o gerenciamento das atividades dos expositores nas feiras:
 
-* Aqui temos as imagens das telas dos consumidores das feiras:
-![Texto alternativo](./resources/imagem/tela%20do%20clientefigma.jpg)
+* Gestão de produtos: possibilita editar informações e imagens dos produtos, mantendo o catálogo sempre atualizado e atrativo para os clientes.
+* Edição de informações da banca/marca: possibilita atualizar descrição, logo e demais informações relevantes, reforçando a identidade da marca dentro da plataforma.
 
-Entre as principais funcionalidades dos Microemprendedores:
+![Texto alternativo](./resources/imagens/prototipofigmaexporsitor.jpg)
 
-* Criação e gerenciamento de eventos: Os microempreendedores podem criar novos eventos, bem como editar,salvar ou deletar,eventos já cadastrados, garantindo controle total sobre sua agenda e participação em feiras.
-
-* Gestão de produtos: É possível editar informações e imagens dos produtos,permitindo manter o catálogo atualizado e atrativo para os clientes.
-
-* Cupons de desconto: Os microempreendedores podem criar cupons de desconto para atrair clientes durante eventos, definir regras de uso e monitorar o aproveitamento dessas promoções.
-
-* Edição de informações da marca: A interface permite atualizar dados do perfil da marca, incluindo descrição, logo e outras informações relevantes para os clientes.
-
-* Aqui temos as imagens das telas dos microemprendedores:
-
-![Texto alternativo](./resources/imagem/telamicroemprendedor.jpg)
-
-
-
-* Plano de Negócios:
-  
-![Texto alternativo](./resources/imagem/planode%20negocio.jpg)
 
 ## Validação
 
@@ -245,6 +222,7 @@ Em seguida, o sistema foi apresentado pessoalmente, por meio de um computador, p
 Após a demonstração, foi aplicado um questionário de feedback,no qual os participantes puderam avaliar a clareza da interface, a utilidade das funcionalidades e sugerir melhorias.
 
 Essa etapa permitiu coletar percepções importantes do público-alvo e validar a proposta apresentada no TCC, mesmo sem a realização de testes completos de uso devido ao tempo disponível.
+
 
 ## Estratégia
 

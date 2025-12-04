@@ -26,6 +26,11 @@ class Banca extends Model
         return $this->hasMany(Produto::class);
     }
 
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class);
+    }
+
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);

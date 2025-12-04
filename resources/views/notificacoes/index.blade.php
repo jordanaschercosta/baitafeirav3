@@ -91,18 +91,13 @@
 
         {{-- LINHA PRINCIPAL --}}
         <div class="d-flex justify-content-between align-items-start">
-
             <div>
-
                 {{-- ÍCONE + TÍTULO --}}
                 <div class="d-flex align-items-center gap-2 mb-1">
-
                     <i class="fa-solid {{ $icone }} {{ $cor }}"></i>
-
                     <h6 class="mb-0">
                         {{ $notificacao->titulo }}
                     </h6>
-
                 </div>
 
                 {{-- MENSAGEM --}}

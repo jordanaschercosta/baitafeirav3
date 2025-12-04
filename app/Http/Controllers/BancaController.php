@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
 use App\Models\Evento;
+use App\Models\Banca;
 use App\Models\Favorito;
 use Exception;
 
@@ -132,6 +133,14 @@ class BancaController extends Controller
      */
     public function destroy(Banca $banca)
     {
-        //
+        $existeEvento = $this->crudService->getParticipacoesEventosByBanca($banca->id);
+
+        if($existeEvento && $existeEvento->count() > 0) {
+            return redirect()->route('bancas.index')->with('error', 'Banca não pode ser deletada! Participação confirmada em evento(s)');
+        }
+
+        $banca->delete();
+
+        return redirect()->route('bancas.index')->with('success', 'Banca excluída com sucesso!');
     }
 }

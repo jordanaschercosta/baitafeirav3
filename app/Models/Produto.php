@@ -23,4 +23,9 @@ class Produto extends Model
     {
         return $this->belongsTo(Banca::class, 'banca_id', 'id');
     }
+
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class, 'produto_id', 'id');
+    }
 }

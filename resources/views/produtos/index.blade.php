@@ -43,6 +43,15 @@
                             {{ $produto->descricao }}
                         </p>
 
+                        <p class="text-muted">
+                            <small class="d-flex align-items-center gap-1">
+                                <i class="fa-regular fa-heart"></i>
+                                <span>
+                                    Adicionado <strong>{{ $produto->favoritos->count() }}</strong> vezes aos favoritos
+                                </span>
+                            </small>
+                        </p>
+
                         <!-- Preço -->
                         @if($produto->em_promocao)
                             <p class="card-text fw-bold">

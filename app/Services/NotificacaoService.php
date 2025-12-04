@@ -94,8 +94,12 @@ class NotificacaoService
 
         $phone = preg_replace('/\D/', '', $phone);
 
+        if (!empty($phone)) {
+            return false;
+        }
+
         // envio teste
-        $phone = '555196363031';
+        // $phone = '555196363031';
 
         $to = "whatsapp:+{$phone}";
 

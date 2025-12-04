@@ -40,6 +40,15 @@
                             {{ $banca->categoria?->nome ?? 'Sem categoria' }}
                         </p>
 
+                        <p class="text-muted">
+                            <small class="d-flex align-items-center gap-1">
+                                <i class="fa-regular fa-heart"></i>
+                                <span>
+                                    Adicionado <strong>{{ $banca->favoritos->count() }}</strong> vezes aos favoritos
+                                </span>
+                            </small>
+                        </p>
+
                         <p class="card-text" style="font-size: 14px;">
                             @if($banca->instagram)
                                 <a href="https://instagram.com/{{ $banca->instagram }}" target="_blank">
@@ -50,11 +59,34 @@
                             @endif
                         </p>
 
-                        <!-- Ações -->
-                        <a href="{{ route('bancas.produtos.index', $banca->id) }}" class="btn btn-sm btn-light">Produtos</a>
-                        <a href="{{ route('bancas.show', $banca->slug) }}" class="btn btn-sm btn-light">Ver</a>
-                        <a href="{{ route('bancas.edit', $banca->id) }}" class="btn btn-sm btn-light">Editar</a>
-                        <a href="{{ route('bancas.edit', $banca->id) }}" class="btn btn-sm btn-danger">Excluir</a>
+                        <div class="d-flex gap-2 align-items-center flex-wrap">
+
+                            <a href="{{ route('bancas.produtos.index', $banca->id) }}" class="btn btn-sm btn-light">
+                                Produtos
+                            </a>
+
+                            <a href="{{ route('bancas.show', $banca->slug) }}" class="btn btn-sm btn-light">
+                                Ver
+                            </a>
+
+                            <a href="{{ route('bancas.edit', $banca->id) }}" class="btn btn-sm btn-light">
+                                Editar
+                            </a>
+
+                            <form action="{{ route('bancas.destroy', $banca->id) }}"
+                                method="POST"
+                                class="d-inline"
+                                onsubmit="return confirm('Tem certeza que deseja deletar esta banca?')">
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    Excluir
+                                </button>
+                            </form>
+
+                        </div>
+
                     </div>
                 </div>
             </div>

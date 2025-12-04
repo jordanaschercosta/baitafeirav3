@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
         <link rel="stylesheet" href="{{ asset('assets/app.css') }}">
+        <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
     </head>
     <body class="antialiased">
         <header>

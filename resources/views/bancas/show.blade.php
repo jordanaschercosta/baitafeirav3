@@ -42,6 +42,14 @@
     </div>
 @endif
 
+<p class="text-muted text-end">
+    <small class="d-flex justify-content-end align-items-center gap-1">
+        <span>
+            Adicionado <strong>{{ $banca->favoritos->count() }}</strong> vezes aos favoritos
+        </span>
+    </small>
+</p>
+
 <div class="row align-items-center">
     <div class="col-md-3 mb-3">
         <img 
@@ -65,6 +73,22 @@
                 target="_blank">
                     {{ '@' . ltrim($banca->instagram, '@') }}
                 </a>
+            </p>
+        @endif
+        
+        <br>
+
+        <h4>Contato</h4>
+        {{-- INFOS EXPOSITOR --}}
+        <p class="mb-1">
+            <i class="fas fa-envelope"></i>
+            <b>Email:</b> {{ $banca->user->email }}
+        </p>
+
+        @if(!empty($banca->user->phone))
+            <p class="mb-1">
+                <i class="fas fa-phone"></i>
+                <b>Telefone:</b> {{ $banca->user->phone }}
             </p>
         @endif
     </div>
@@ -192,20 +216,6 @@
             </div>
         @endforeach
     </div>
-@endif
-
-<h4>Contato</h4>
-{{-- INFOS EXPOSITOR --}}
-<p class="mb-1">
-    <i class="fas fa-envelope"></i>
-    <b>Email:</b> {{ $banca->user->email }}
-</p>
-
-@if(!empty($banca->user->phone))
-<p class="mb-1">
-    <i class="fas fa-phone"></i>
-    <b>Telefone:</b> {{ $banca->user->phone }}
-</p>
 @endif
 
 @endsection
