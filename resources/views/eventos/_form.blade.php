@@ -19,14 +19,22 @@
 <div class="row">
     <div class="col-md-6 form-group">
         <label for="inicio">Início *</label>
-        <input type="datetime-local" name="inicio" id="inicio" class="form-control" 
-               value="{{ old('inicio', isset($evento->inicio) ? date('Y-m-d\TH:i', strtotime($evento->inicio)) : '') }}" required>
+        <input type="datetime-local"
+               name="inicio"
+               id="inicio"
+               class="form-control"
+               value="{{ old('inicio', isset($evento->inicio) ? \Carbon\Carbon::createFromFormat('d/m/Y H:i', $evento->inicio)->format('Y-m-d\TH:i') : '') }}"
+               required>
     </div>
 
     <div class="col-md-6 form-group">
         <label for="fim">Fim *</label>
-        <input type="datetime-local" name="fim" id="fim" class="form-control" 
-               value="{{ old('fim', isset($evento->fim) ? date('Y-m-d\TH:i', strtotime($evento->fim)) : '') }}" required>
+        <input type="datetime-local"
+               name="fim"
+               id="fim"
+               class="form-control"
+               value="{{ old('fim', isset($evento->fim) ? \Carbon\Carbon::createFromFormat('d/m/Y H:i', $evento->fim)->format('Y-m-d\TH:i') : '') }}"
+               required>
     </div>
 </div>
 
@@ -42,9 +50,13 @@
 <input type="hidden" name="imagemOriginal" id="imagemOriginalHidden">
 <input type="hidden" name="cropped_image" id="cropped_image">
 
-<div class="form-group">
-    <img id="preview" style="max-width: 1000px;" 
-         src="{{ $evento->imagem_url }}">
+<div class="form-group text-center">
+    <img 
+        id="preview" 
+        style="max-width: 100%; display: {{ isset($evento->imagem_url) ? 'block' : 'none' }};"
+        src="{{ isset($evento->imagem_url) ? $evento->imagem_url : '' }}"
+        alt="Pré-visualização"
+    >
 </div>
 
 <div class="form-group">

@@ -73,7 +73,7 @@
     <img 
         id="preview" 
         style="max-width: 300px; display: {{ isset($banca->foto_url) ? 'block' : 'none' }};"
-        src="{{ isset($banca->foto_url) ? asset('storage/uploads/'.$banca->foto_url) : '' }}"
+        src="{{ isset($banca->foto_url) ? $banca->foto_url : '' }}"
         alt="Pré-visualização"
     >
 </div>
