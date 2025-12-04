@@ -32,15 +32,25 @@
 </div>
 
 <div class="form-group">
-    <label for="descricao">Descrição *</label>
+    <label for="descricao">
+        Descrição *
+        <small class="text-muted">
+            (<span id="contador">0</span>/300 caracteres)
+        </small>
+    </label>
+
     <textarea
         name="descricao"
         id="descricao"
         class="form-control"
         required
+        maxlength="300"
+        style="font-size:14px; height:100px; resize:none;"
+        oninput="atualizarContador()"
     >{{ old('descricao', $produto->descricao ?? '') }}</textarea>
 </div>
 
+<br>
 <div class="form-group">
     <label for="imagem_url">Imagem *</label>
     <input type="file" id="imagem_url" accept="image/*">
@@ -60,16 +70,20 @@
 
 <div class="form-group mt-3">
     <label for="preco">Preço *</label>
-    <input
-        type="number"
-        name="preco"
-        id="preco"
-        class="form-control"
-        step="0.1"
-        required
-        value="{{ old('preco', $produto->preco ?? '') }}"
-    >
+    <div class="input-group">
+        <span class="input-group-text">R$</span>
+        <input
+            type="number"
+            name="preco"
+            id="preco"
+            class="form-control"
+            step="0.1"
+            required
+            value="{{ old('preco', $produto->preco ?? '') }}"
+        >
+    </div>
 </div>
+
 <br>
 
 <div class="form-group">
@@ -83,17 +97,23 @@
 
 <div class="form-group mt-3">
     <label for="valor_novo">Preço Promocional</label>
-    <input
-        type="number"
-        name="valor_novo"
-        id="valor_novo"
-        class="form-control"
-        step="0.1"
-        disabled
-        value="{{ old('valor_novo', $produto->valor_novo ?? '') }}"
-    >
+    <div class="input-group">
+        <span class="input-group-text">R$</span>
+        <input
+            type="number"
+            name="valor_novo"
+            id="valor_novo"
+            class="form-control"
+            step="0.1"
+            disabled
+            value="{{ old('valor_novo', $produto->valor_novo ?? '') }}"
+        >
+    </div>
 </div>
 
-<button type="submit" class="btn btn-primary mt-3">
-    {{ $buttonText ?? 'Salvar' }}
-</button>
+
+<div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-primary mt-3">
+        {{ $buttonText ?? 'Salvar' }}
+    </button>
+</div>

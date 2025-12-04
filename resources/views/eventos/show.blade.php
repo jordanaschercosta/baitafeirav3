@@ -71,14 +71,23 @@
 
 <h3>{{ $evento->titulo }}</h3>
 
-<p><strong>Início:</strong> {{ $evento->inicio }}</p>
-<p><strong>Fim:</strong> {{ $evento->fim }}</p>
+<p>
+    <i class="fa-solid fa-calendar-plus me-2"></i>
+    <strong>Início:</strong> {{ $evento->inicio }}
+</p>
 
 <p>
+    <i class="fa-solid fa-calendar-check me-2"></i>
+    <strong>Fim:</strong> {{ $evento->fim }}
+</p>
+
+<p>
+    <i class="fa-solid fa-align-left me-2 text-secondary"></i>
     <strong>Descrição</strong><br>
     {{ $evento->descricao }}
 </p>
 
+<br>
 <h4>Bancas Participantes</h4>
 <div class="row">
     @foreach ($listaBancas as $banca)
@@ -116,7 +125,19 @@
 
 <br>
 
-<small>Organizador {{ $evento->user->name }}</small>
+<h4>Organizador</h4>
+{{-- INFOS EXPOSITOR --}}
+<p class="mb-1">
+    <i class="fas fa-envelope"></i>
+    <b>Email:</b> {{ $evento->user->email }}
+</p>
+
+@if(!empty($evento->user->phone))
+<p class="mb-1">
+    <i class="fas fa-phone"></i>
+    <b>Telefone:</b> {{ $evento->user->phone }}
+</p>
+@endif
 
 @endsection
 

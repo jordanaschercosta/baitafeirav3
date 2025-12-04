@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models;
 use App\Models\Enum\StatusEvento;
 use App\Models\Enum\TipoNotificacao;
+use App\Models\Evento;
 use Exception;
 
 class CRUDService
@@ -91,9 +92,13 @@ class CRUDService
         return Models\Banca::where('slug', $slug)->firstOrFail();
     }
 
-    public function getBancasByCategoria(int $categoriaId) 
+    public function getBancasByCategoria(int $categoriaId)
     {
-        return Models\Banca::where('categoria_id', $categoriaId)->get();
+        return Models\Banca::where('categoria_id', $categoriaId)
+            ->when(request('search'), function ($query) {
+                $query->where('nome_fantasia', 'like', '%' . request('search') . '%');
+            })
+            ->paginate(12);
     }
 
     public function createBanca(array $data)
@@ -164,7 +169,7 @@ class CRUDService
     public function getEventosByUser(int $user_id)
     {
         return Models\Evento::where('user_id', $user_id)
-            ->where('inicio', '>', now())
+            ->where('fim', '>', now())
             ->orderBy('inicio','asc')
             ->paginate(6);
     }
@@ -179,7 +184,7 @@ class CRUDService
       return Models\Participacao::with('evento')
         ->where('user_id', $user_id)
         ->whereHas('evento', function ($query) {
-            $query->where('inicio', '>', now());
+            $query->where('fim', '>', now());
         })
         ->orderBy(Models\Evento::select('inicio')
             ->whereColumn('eventos.id', 'participacoes.evento_id')
@@ -202,14 +207,14 @@ class CRUDService
                 $longitude, 
                 $latitude
             ])
-        ->where('inicio', '>', now())
+        ->where('fim', '>', now())
         ->orderBy('distancia', 'asc')
         ->paginate($quantidade);
     }
 
     public function getEventos($quantidade = 6)
     {
-        return Models\Evento::where('inicio', '>', now())
+        return Models\Evento::where('fim', '>', now())
             ->orderBy('inicio', 'asc')
             ->paginate($quantidade);
     }
@@ -218,7 +223,7 @@ class CRUDService
     {
         return Models\Participacao::where('user_id', $user_id)
             ->whereHas('evento', function($query) {
-                $query->where('inicio', '>', now());
+                $query->where('fim', '>', now());
             })
             ->with('evento')
             ->get()
@@ -312,7 +317,9 @@ class CRUDService
             $object = $object['participacao']->evento;
         }
 
-        $url = route('eventos.show', $object->slug);
+        if ($object->slug) {
+            $url = route('eventos.show', $object->slug);
+        }
 
         if ($tipo == TipoNotificacao::EVENTO) {
             $titulo = "Novo Evento confirmado!";
@@ -332,6 +339,11 @@ class CRUDService
                 . "{$object->titulo}\n"
                 . "em {$object->inicio}.\n\n"
                 . "Confirme sua presença e apoie o comércio local.";
+        } else if ($tipo == TipoNotificacao::PRODUTO_PROMOCAO) {
+            $titulo = "Seu produto favorito entrou em promoção!";
+            $mensagem = "Um de seus produtos favoritos, <b>{$object->nome}</b> entrou em promoção!";
+
+            $url = route('bancas.show', $object->banca->slug);
         }
 
         $dataSave = [
@@ -342,7 +354,9 @@ class CRUDService
             'tipo' => $tipo
         ];
 
-        $dataSave['evento_id'] = $object->id;
+        if ($object instanceof Evento) {
+            $dataSave['evento_id'] = $object->id;
+        }
 
         return Models\Notificacao::create($dataSave);
     }
@@ -369,5 +383,17 @@ class CRUDService
     public function getFavoritadoByBancaId($bancaId)
     {
         return Models\Favorito::where('banca_id', $bancaId)->get();
-    }   
+    }
+
+    public function getFavoritadoByProdutoId($produtoId)
+    {
+        return Models\Favorito::where('produto_id', $produtoId)->get();
+    }
+
+    public function getProdutosFavoritosUsuario() 
+    {
+        return Models\Favorito::where('user_id', session('user_id'))
+            ->whereNotNull('produto_id')
+            ->get();
+    }
 }

@@ -69,6 +69,11 @@ class BancaController extends Controller
                 ->first();
         }
 
+        $produtos_favoritos = $this->crudService
+            ->getProdutosFavoritosUsuario()
+            ->map(fn ($favorito) => $favorito->produto_id)
+            ->toArray();
+
         $evento = null;
         if (request()->has('evento')) {
             $evento = Evento::find(request()->evento);
@@ -78,7 +83,8 @@ class BancaController extends Controller
 
         $eventos = $this->crudService->getParticipacoesEventosByBanca($banca->id);
 
-        return view('bancas.show', compact('banca', 'bancas', 'evento', 'eventos', 'favorito'));
+
+        return view('bancas.show', compact('banca', 'bancas', 'evento', 'eventos', 'favorito', 'produtos_favoritos'));
     }
 
    /**

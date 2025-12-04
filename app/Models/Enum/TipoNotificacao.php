@@ -8,5 +8,6 @@ class TipoNotificacao {
     const EVENTO_LEMBRETE = "evento_lembrete";
     const EVENTO_CANCELADO = "evento_cancelado";
     const FAVORITO_EVENTO = "favorito_evento";
+    const PRODUTO_PROMOCAO = "promocao_produto";
     const ALTERACAO_PARTICIPACAO = "participacao_alteracao";
 }

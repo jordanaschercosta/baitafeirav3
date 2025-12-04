@@ -8,8 +8,9 @@
         <title>Baita Feira -  Acompanhe eventos</title>
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 
         <!-- Styles -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -68,6 +69,16 @@
                 </nav>
             @endif
         </header>
+    
+        @if(!empty($bannerHome))
+            <section class="banner-home"
+                style="background-image: url('{{ $bannerHome }}');">
+                <div class="container">
+                    <h1>Descubra as melhores feiras na sua cidade!</h1>
+                    <p>BaitaFeira reúne clientes, expositores e organizadores em um só lugar.</p>
+                </div>
+            </section>
+        @endif
 
         <div class="container" id="main-container">
             <main>
@@ -87,7 +98,7 @@
             </main>
         </div>
 
-        <footer class="bg-light text-center text-lg-start mt-5 border-top">
+        <footer class="footer-custom text-center text-lg-start mt-5 border-top">
             <div class="container p-4">
 
                 <!-- Texto -->
@@ -96,7 +107,7 @@
                 </div>
 
                 <!-- Ícones sociais -->
-                <div class="text-center">
+               <div class="text-center py-3">
                     <!-- Instagram -->
                     <a href="https://instagram.com/seu_instagram" target="_blank" 
                     class="btn btn-outline-dark btn-sm rounded-circle me-2">
@@ -109,7 +120,6 @@
                         <i class="fa-brands fa-facebook"></i>
                     </a>
                 </div>
-
             </div>
 
             <!-- Copyright -->

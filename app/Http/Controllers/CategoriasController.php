@@ -19,7 +19,9 @@ class CategoriasController extends Controller
             $proximosEventos =  $this->crudService->getEventos();
         }
 
-        return view('categorias.index', compact('categorias', 'proximosEventos'));
+        $bannerHome = asset('images/banners/bannerhome.png');
+
+        return view('categorias.index', compact('categorias', 'proximosEventos', 'bannerHome'));
     }
 
     public function show($slug) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models;
+use App\Models\Enum\TipoNotificacao;
 use App\Services\ProdutoService;
 use Exception;
 use Illuminate\Http\Request;
@@ -105,6 +106,10 @@ class ProdutoController extends Controller
             'em_promocao'   => ($request->em_promocao) ? true : false,
             'valor_novo'    => $request->valor_novo
         ]);
+
+        if ($request->em_promocao) {
+            $this->notificacaoService->enviarNotificacao($produto, TipoNotificacao::PRODUTO_PROMOCAO);
+        }
 
         return redirect()
             ->route('bancas.produtos.index', ['banca' => $produto->banca])

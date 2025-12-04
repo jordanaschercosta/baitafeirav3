@@ -12,7 +12,33 @@
         </ol>
     </nav>
 
+    <form method="GET"
+        action="{{ route('categorias.show', $categoria->slug) }}"
+        class="mb-4">
+
+        <div class="row g-2">
+            <div class="col-md-10">
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control"
+                    placeholder="Buscar banca pelo nome..."
+                    value="{{ request('search') }}"
+                >
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-light w-100">
+                    <i class="fa fa-search"></i> Buscar
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+
     <h4>Bancas</h4>
+    
     @if($bancas->isNotEmpty())
         <div class="row">
             @foreach ($bancas as $banca)
@@ -23,6 +49,11 @@
                     </div>
                 </a>
             @endforeach
+        </div>
+
+        <br>
+        <div>
+            {{ $bancas->links('pagination::bootstrap-5') }}
         </div>
     @else
         <p>Nenhuma banca cadastrada nesta categoria.</p>

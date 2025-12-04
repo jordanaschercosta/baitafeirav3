@@ -11,6 +11,7 @@ class Favorito extends Model
     protected $fillable = [
         'user_id',
         'banca_id',
+        'produto_id'
     ];
 
     /**
@@ -27,5 +28,13 @@ class Favorito extends Model
     public function banca()
     {
         return $this->belongsTo(Banca::class);
+    }
+
+    /**
+     * Relacionamento: um favorito pertence a um produto.
+     */
+    public function produto()
+    {
+        return $this->belongsTo(Produto::class);
     }
 }

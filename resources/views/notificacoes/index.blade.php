@@ -59,7 +59,9 @@
     } elseif ($notificacao->tipo === TipoNotificacao::EVENTO_REAGENDADO) {
         $icone = 'fa-calendar-days';
         $cor   = 'text-primary';
-
+    } elseif ($notificacao->tipo === TipoNotificacao::PRODUTO_PROMOCAO) {
+        $icone = 'fa-tag';
+        $cor   = 'text-primary';
     } else {
         $icone = 'fa-calendar-check';
         $cor   = 'text-primary';
@@ -97,15 +99,15 @@
 
                     <i class="fa-solid {{ $icone }} {{ $cor }}"></i>
 
-                    <h5 class="mb-0">
+                    <h6 class="mb-0">
                         {{ $notificacao->titulo }}
-                    </h5>
+                    </h6>
 
                 </div>
 
                 {{-- MENSAGEM --}}
                 <p class="mb-0 text-muted">
-                    {{ $notificacao->mensagem }}
+                    {!! $notificacao->mensagem !!}
                 </p>
 
             </div>
@@ -121,6 +123,11 @@
                     <a href="{{ route('eventos.show', $notificacao->evento->slug) }}"
                        class="btn btn-sm btn-outline-primary">
                         Ver evento
+                    </a>
+                @elseif ($notificacao->url)
+                    <a href="{{ $notificacao->url }}"
+                       class="btn btn-sm btn-outline-primary">
+                        Ver mais
                     </a>
                 @endif
 

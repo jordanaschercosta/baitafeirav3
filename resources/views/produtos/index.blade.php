@@ -39,18 +39,29 @@
                         <h5 class="card-title">{{ $produto->nome }}</h5>
 
                         <!-- Descrição -->
-                        <p class="card-text" style="font-size: 14px;">
-                            {{ \Illuminate\Support\Str::limit($produto->descricao, 70, ' [...]') }}
+                        <p class="card-text" style="font-size: 14px; min-height: 151px;">
+                            {{ $produto->descricao }}
                         </p>
 
                         <!-- Preço -->
-                        <p class="card-text fw-bold">
-                            R$ {{ number_format($produto->preco, 2, ',', '.') }}
-                        </p>
-
-                        <!-- Promoção -->
                         @if($produto->em_promocao)
-                            <p class="text-success mb-1">Promoção! R$ {{ number_format($produto->valor_novo, 2, ',', '.') }}</p>
+                            <p class="card-text fw-bold">
+                                <span class="text-muted text-decoration-line-through">
+                                    R$ {{ number_format($produto->preco, 2, ',', '.') }}
+                                </span>
+
+                                <span class="text-success ms-2">
+                                    R$ {{ number_format($produto->valor_novo, 2, ',', '.') }}
+                                </span>
+
+                                <span class="badge bg-success ms-2">
+                                    <i class="fa-solid fa-tag me-1"></i> Promoção
+                                </span>
+                            </p>
+                        @else
+                            <p class="card-text fw-bold">
+                                R$ {{ number_format($produto->preco, 2, ',', '.') }}
+                            </p>
                         @endif
 
                         <!-- Ações -->

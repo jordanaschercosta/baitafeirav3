@@ -19,7 +19,7 @@
 
 @if (!isUserDonoBanca($banca->user_id) && !isUserOrganizador())
     <div class="row">
-        <div class="col-md-3 ms-auto">
+        <div class="col-md-3 ms-auto" style="text-align: right">
             @if ($favorito)
                 <form action="{{ route('favoritos.destroy', $favorito->id) }}" method="POST" class="d-inline">
                     @csrf
@@ -85,11 +85,52 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $produto->nome }}</h5>
 
-                        <p class="card-text" style="font-size: 14px;">
-                            {{ Str::limit($produto->descricao, 80, '...') }}
+                        <p class="card-text" style="font-size: 14px; min-height: 151px">
+                            {{ $produto->descricao }}
                         </p>
 
-                        <p class="card-text fw-bold">R$ {{ number_format($produto->preco, 2, ',', '.') }}</p>
+                        <!-- Preço -->
+                        @if($produto->em_promocao)
+                            <p class="card-text fw-bold">
+                                <span class="text-muted text-decoration-line-through">
+                                    R$ {{ number_format($produto->preco, 2, ',', '.') }}
+                                </span>
+
+                                <span class="text-success ms-2">
+                                    R$ {{ number_format($produto->valor_novo, 2, ',', '.') }}
+                                </span>
+
+                                <span class="badge bg-success ms-2">
+                                    <i class="fa-solid fa-tag me-1"></i> Promoção
+                                </span>
+                            </p>
+                        @else
+                            <p class="card-text fw-bold">
+                                R$ {{ number_format($produto->preco, 2, ',', '.') }}
+                            </p>
+                        @endif
+                        
+                        
+                        @if(in_array($produto->id, $produtos_favoritos))
+                                <form action="{{ route('favoritos.destroy', $produto->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button class="btn btn-outline-danger btn-sm w-100">
+                                        <i class="fa-solid fa-heart"></i> Remover dos Favoritos
+                                    </button>
+                                </form>
+
+                            @else
+                                <form action="{{ route('favoritos.store') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="produto_id" value="{{ $produto->id }}">
+                                    <button class="btn btn-light btn-sm w-100">
+                                        <i class="fa-regular fa-heart"></i> Adicionar aos Favoritos
+                                    </button>
+                                </form>
+                            @endif
+                        
                     </div>
                 </div>
             </div>
@@ -109,7 +150,7 @@
         @foreach($bancas as $banca)
             <div class="col-md-3 mb-4">
                 <div class="card item-card d-flex flex-column h-100"
-                     style="border-radius: 10px; overflow: hidden; cursor: pointer;">
+                     style="border-radius: 10px; overflow: hidden;">
 
                     {{-- Imagem --}}
                     <img 

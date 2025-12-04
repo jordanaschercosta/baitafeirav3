@@ -3,13 +3,17 @@
 @section('title', 'Home')
 
 @section('content')
-   <h3>Categorias</h3>
-    
+    <h3 class="title-center">
+        Categorias
+    </h3>
+
     <div class="row">
         @foreach ($categorias as $categoria)
             <a href="{{ route('categorias.show', $categoria->slug) }}" class="col-md-2 click-item">
                 <div class="img-wrapper">
-                    <img src="{{ $categoria->imagem }}">
+                    <div class="thumbnail">
+                        <img src="{{ $categoria->imagem }}">
+                    </div>
                     <p class="text-center">{{ $categoria->nome }}</p>
                 </div>
             </a>

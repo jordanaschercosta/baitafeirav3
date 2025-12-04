@@ -16,9 +16,15 @@ class FavoritoController extends Controller
     {
         $favoritos = Favorito::with('banca')
             ->where('user_id', session('user_id'))
+            ->whereNotNull('banca_id')
             ->get();
 
-        return view('favoritos.index', compact('favoritos'));
+        $produtosFavoritos = Favorito::with('produto')
+            ->where('user_id', session('user_id'))
+            ->whereNotNull('produto_id')
+            ->get();
+
+        return view('favoritos.index', compact('favoritos', 'produtosFavoritos'));
     }
 
     /**
@@ -26,17 +32,24 @@ class FavoritoController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(['banca_id' => 'required|exists:bancas,id']);
         $userId = session('user_id');
 
+        if ($request->produto_id) {
+            $campo = 'produto_id';
+            $id = $request->produto_id;
+        } else {
+            $campo = 'banca_id';
+            $id = $request->banca_id;
+        }
+
         $existe = Favorito::where('user_id', $userId)
-            ->where('banca_id', $request->banca_id)
+            ->where($campo, $id)
             ->first();
 
         if (!$existe) {
             Favorito::create([
                 'user_id' => $userId,
-                'banca_id' => $request->banca_id,
+                $campo => $id,
             ]);
         }
 

@@ -4,11 +4,13 @@
 
 <div class="row">
     <div class="col-md-6">
-        @if($paginacao)
-            {{ $proximosEventos->total() }} eventos perto de você
-        @else
-            {{ $proximosEventos->count() }} eventos encontrados
-        @endif
+        <small class="text-muted">
+            @if($paginacao)
+                {{ $proximosEventos->total() }} eventos perto de você
+            @else
+                {{ $proximosEventos->count() }} eventos encontrados
+            @endif
+        </small>
     </div>
     @if($paginacao)
         <div class="col-md-6 float-end">
@@ -16,7 +18,7 @@
                 <div class="dropdown">
                     <button class="btn btn-default dropdown-toggle" type="button" id="ordenarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     Ordenar
-                    </button>
+                        </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="ordenarDropdown">
                     <li><a class="dropdown-item" href="?ordenar=data">Data</a></li>
                     <li><a class="dropdown-item" href="?ordenar=mais_perto">Mais perto</a></li>
@@ -28,7 +30,18 @@
 </div>
 
 <div class="row">
+    @php
+        use Carbon\Carbon;
+        $agora = Carbon::now();
+    @endphp
+
     @foreach ($proximosEventos as $evento)
+        @php
+            $inicio = Carbon::createFromFormat('d/m/Y H:i', $evento->inicio);
+            $fim    = Carbon::createFromFormat('d/m/Y H:i', $evento->fim);
+            $emAndamento = $agora->between($inicio, $fim);
+        @endphp
+
         <div class="col-md-4">
             <a href="{{ route('eventos.show', $evento->slug) }}" class="reset-link">
                 <div class="thumbnail">
@@ -59,8 +72,15 @@
                         <i class="fas fa-calendar"></i>
                         {{ $evento->inicio }}
                     @endif
-                </p>
 
+                    @if($emAndamento && $evento->status != StatusEvento::CANCELADO)
+                        <span class="badge bg-success ms-2 d-inline-flex align-items-center gap-1">
+                            <span class="pulse-dot"></span>
+                            Acontecendo agora
+                        </span>
+                    @endif
+                </p>
+                
                 <p>
                     <i class="fas fa-map-marker-alt"></i> {{ $evento->endereco }}
                 </p>

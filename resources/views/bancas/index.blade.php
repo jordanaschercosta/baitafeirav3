@@ -51,8 +51,8 @@
                         </p>
 
                         <!-- Ações -->
-                        <a href="{{ route('bancas.produtos.index', $banca->id) }}" class="btn btn-sm btn-light">Ver Produtos</a>
-                        <a href="{{ route('bancas.show', $banca->slug) }}" class="btn btn-sm btn-light">Exibir</a>
+                        <a href="{{ route('bancas.produtos.index', $banca->id) }}" class="btn btn-sm btn-light">Produtos</a>
+                        <a href="{{ route('bancas.show', $banca->slug) }}" class="btn btn-sm btn-light">Ver</a>
                         <a href="{{ route('bancas.edit', $banca->id) }}" class="btn btn-sm btn-light">Editar</a>
                         <a href="{{ route('bancas.edit', $banca->id) }}" class="btn btn-sm btn-danger">Excluir</a>
                     </div>

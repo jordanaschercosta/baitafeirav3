@@ -75,6 +75,13 @@ class NotificacaoService
             }
         }
 
+        if ($obj instanceof Models\Produto) {
+            $favoritados = $this->crudService->getFavoritadoByProdutoId($obj->id);
+            foreach($favoritados as $favoritado) {
+                $users[] = $favoritado->user; 
+            }
+        }
+
         return $users;
     }
 
@@ -104,8 +111,6 @@ class NotificacaoService
 
         } catch (\Exception $e) {
 
-            var_dump($e->getMessage());
-            exit;
             Log::error('Erro ao enviar WhatsApp', [
                 'to'    => $to,
                 'error' => $e->getMessage()
@@ -113,7 +118,6 @@ class NotificacaoService
 
             return false;
         }
-
     }
 
     protected function montarMensagem($obj, $tipo)
@@ -140,6 +144,11 @@ class NotificacaoService
                 . "🎉 Evento: {$obj->titulo}\n\n"
                 . "👉 Ver detalhes em:\n"
                 . route("eventos.show", $obj->slug);
+        } else if ($tipo == TipoNotificacao::PRODUTO_PROMOCAO) {
+            return "teste";
+            return "*BAITA-FEIRA AVISA* 💸\n\n"
+                . "🏷️ *PROMOÇÃO: {$obj->nome} com desconto!*\n\n"
+                . "👉 Ver detalhes em:";
         }
 
         return "";
