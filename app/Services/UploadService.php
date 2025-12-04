@@ -2,63 +2,38 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Str;
+use App\Models;
 use Exception;
 
 class UploadService
 {
-    public function uploadBlobImage(string $image): string
+    public function uploadBlobImage($image) : string
     {
         try {
-            // Valida base64
-            if (!preg_match('/^data:image\/(\w+);base64,/', $image, $matches)) {
-                throw new Exception('Imagem base64 inválida.');
-            }
 
-            $extension = strtolower($matches[1]);
-            $allowed   = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-
-            if (!in_array($extension, $allowed)) {
-                throw new Exception('Formato de imagem não permitido.');
-            }
-
-            $image = substr($image, strpos($image, ',') + 1);
-            $decodedImage = base64_decode($image);
-
-            if ($decodedImage === false) {
-                throw new Exception('Falha ao decodificar imagem.');
-            }
-
-            // Nome único
-            $filename = Str::uuid() . '.' . $extension;
-
-            // Define o diretório correto
-            if (app()->environment('production')) {
-
-                // HOSTINGER → public_html
-                $uploadDir = base_path('../public_html/storage/uploads');
-
+            if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
+                $image = substr($image, strpos($image, ',') + 1);
+                $type = strtolower($type[1]);
             } else {
-
-                // LOCAL → public/storage
-                $uploadDir = public_path('storage/uploads');
+                return back()->with('error', 'Imagem inválida');
             }
+    
+            $image = base64_decode($image);
+    
+            $filename = uniqid() . '.' . $type;
 
-            // Garantir que a pasta exista
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
+            $uploadPath =
+            $path = public_path('storage/uploads/' . $filename);
 
-            // Caminho completo
-            $path = $uploadDir . '/' . $filename;
+            file_put_contents($path, $image);
 
-            file_put_contents($path, $decodedImage);
+            $publicUrl = asset('storage/uploads/' . $filename);
 
-            // URL pública funciona igual nos dois ambientes
-            return asset('storage/uploads/' . $filename);
+            return $publicUrl; 
 
-        } catch (Exception $e) {
-            throw $e; // pode também logar se quiser
+        } catch (Exception $exception) {
+
+            throw $exception;
         }
     }
 }
