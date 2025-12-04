@@ -87,8 +87,9 @@ class NotificacaoService
 
     protected function enviarWPMessage($obj, $tipo, $phone) 
     {
-        $sid   = 'ACc40b4f3f624bc5abdb0c4a11209be967';
-        $token = 'a6d21a5505d7d82aec4bee20b7492c2d';
+        $sid   = env('TWILIO_SID');
+        $token = env('TWILIO_TOKEN');
+
         $from  = 'whatsapp:+14155238886';
 
         $phone = preg_replace('/\D/', '', $phone);
