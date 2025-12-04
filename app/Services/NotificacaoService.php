@@ -41,7 +41,7 @@ class NotificacaoService
                 $this->crudService->createNotificacao($tipo, $obj, $destinario);
                 $this->enviarWPMessage($obj, $tipo, $destinario->phone);
             } catch (Exception $exception) {
-                var_dump($exception->getMessage());
+                //
             }
         }
     }

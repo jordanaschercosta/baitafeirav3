@@ -31,7 +31,7 @@
                          style="border-radius: 10px; overflow:hidden; cursor:pointer;">
 
                         <!-- Imagem -->
-                        <img src="{{ asset('storage/uploads/' . $banca->foto_url) }}"
+                        <img src="{{ $banca->foto_url }}"
                              class="card-img-top"
                              alt="{{ $banca->nome_fantasia }}"
                              style="height: 180px; object-fit: cover;">
@@ -70,7 +70,7 @@
 
             <div class="col-md-3 mb-4">
                 <div class="card item-card d-flex flex-column h-100" style="border-radius: 10px; overflow:hidden;">
-                        <img src="{{ asset('storage/uploads/' . $produto->imagem_url) }}"
+                        <img src="{{ $produto->imagem_url }}"
                             class="card-img-top"
                             alt="{{ $produto->nome }}"
                             style="height: 180px; object-fit: cover;">

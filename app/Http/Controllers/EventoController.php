@@ -58,7 +58,7 @@ class EventoController extends Controller
         }
 
         $evento = $this->crudService->createEvento([
-            'titulo' => $request->titulo,
+            'titulo' => 'k3pq3pw'.rand() . $request->titulo,
             'inicio' => $request->inicio,
             'fim' => $request->fim,
             'descricao' => $request->descricao,
@@ -208,11 +208,16 @@ class EventoController extends Controller
 
         $this->validaOwner($this->crudService->getEventoById($id));
 
+        if ($evento->status == StatusEvento::CANCELADO) {
+            $evento->delete();
+            return redirect()
+                ->route('eventos.index')
+                ->with('success', 'Evento excluído com sucesso!');
+        }
+        
         $this->notificacaoService->enviarNotificacao($evento, TipoNotificacao::EVENTO_CANCELADO);
-
         $this->crudService->cancelaEvento($id);
 
-        exit;
         return redirect()
             ->route('eventos.index')
             ->with('success', 'Evento cancelado com sucesso!');

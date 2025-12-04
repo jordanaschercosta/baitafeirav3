@@ -1,3 +1,7 @@
+@php
+    use App\Models\Enum\StatusEvento;
+@endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -38,22 +42,41 @@
                     
                     <!-- Imagem do evento -->
                     @if($evento->imagem_url)
-                        <img src="{{ asset('storage/uploads/' . $evento->imagem_url) }}" 
+                        <img src="{{ $evento->imagem_url }}" 
                              class="card-img-top" 
                              alt="{{ $evento->titulo }}" 
                              style="height: 180px; object-fit: cover;">
                     @endif
 
                     <div class="card-body d-flex flex-column">
-                        <!-- Título -->
-                        <h5 class="card-title">{{ $evento->titulo }}</h5>
+                                        <h5 class="d-flex align-items-center gap-2">
+                    @if($evento->status == StatusEvento::CANCELADO)
+                        <span style="text-decoration: line-through; color: red;">
+                            {{ $evento->titulo }}
+                        </span>
+                        <span class="text-danger" style="font-size: 0.8rem;">
+                            (Evento cancelado)
+                        </span>
+                    @else
+                        {{ $evento->titulo }}
+                    @endif
+                </h5>
 
-                        <!-- Datas -->
-                        <p class="card-text mb-1"><strong>Início:</strong> {{ $evento->inicio }}</p>
-                        <p class="card-text mb-1"><strong>Fim:</strong> {{ $evento->fim }}</p>
+                {{-- DATA --}}
+                <p>
+                    @if($evento->status == StatusEvento::CANCELADO)
+                        <span class="text-danger">
+                            <i class="fas fa-calendar-times"></i>
+                            {{ $evento->inicio }}
+                        </span>
+                    @else
+                        <i class="fas fa-calendar"></i>
+                        {{ $evento->inicio }}
+                    @endif
+                </p>
 
-                        <!-- Endereço -->
-                        <p class="card-text mb-3"><strong>Endereço:</strong> {{ $evento->endereco }}</p>
+                <!-- Endereço -->
+                <p class="card-text mb-3"><strong>Endereço:</strong> {{ $evento->endereco }}</p>
 
                         <!-- Número de participantes -->
                         <p class="card-text mb-3">
@@ -64,7 +87,7 @@
                         <!-- Botões -->
                         <div class="mt-auto">
                             <a href="{{ route('eventos.show', $evento->slug) }}" class="btn btn-sm btn-light mb-1 w-100">
-                                Exibir
+                                Ver
                             </a>
                             
                             @if (isEventOrganizador($evento->user_id))
@@ -75,7 +98,11 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger w-100">
-                                        Cancelar
+                                        @if ($evento->status == StatusEvento::CANCELADO)
+                                            Excluir
+                                        @else
+                                            Cancelar
+                                        @endif
                                     </button>
                                 </form>
                             @else

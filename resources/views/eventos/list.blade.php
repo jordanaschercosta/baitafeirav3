@@ -45,7 +45,7 @@
         <div class="col-md-4">
             <a href="{{ route('eventos.show', $evento->slug) }}" class="reset-link">
                 <div class="thumbnail">
-                    <img style="max-width: 100%;" src="{{ asset('storage/uploads/' . $evento->imagem_url) }}">
+                    <img style="max-width: 100%;" src="{{ $evento->imagem_url }}">
                 </div>
 
                 <h5 class="d-flex align-items-center gap-2">

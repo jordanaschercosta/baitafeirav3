@@ -69,7 +69,11 @@
     <input type="file" id="imagem_url" name="foto_url" accept="image/*">
 </div>
 
-<div class="form-group">
-    <img id="preview" style="max-width: 300px; display: {{ isset($banca->foto_url) ? 'block' : 'none' }};"
-        src="{{ isset($banca->foto_url) ? asset('storage/uploads/' . $banca->foto_url) : '' }}">
+<div class="form-group text-center">
+    <img 
+        id="preview" 
+        style="max-width: 300px; display: {{ isset($banca->foto_url) ? 'block' : 'none' }};"
+        src="{{ isset($banca->foto_url) ? asset('storage/uploads/'.$banca->foto_url) : '' }}"
+        alt="Pré-visualização"
+    >
 </div>

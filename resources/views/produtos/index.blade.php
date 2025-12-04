@@ -29,7 +29,7 @@
             <div class="col-md-3 mb-4">
                 <div class="card item-card" style="border-radius: 10px; overflow:hidden; cursor:pointer;">
                     <!-- Imagem -->
-                    <img src="{{ asset('storage/uploads/' . $produto->imagem_url) }}"
+                    <img src="{{ $produto->imagem_url }}"
                          class="card-img-top"
                          alt="{{ $produto->nome }}"
                          style="height: 180px; object-fit: cover;">
@@ -76,7 +76,7 @@
                         <!-- Ações -->
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('bancas.produtos.edit', ['banca' => $banca->id, 'produto' => $produto->id]) }}" 
-                               class="btn btn-sm btn-primary">Editar</a>
+                               class="btn btn-sm btn-light">Editar</a>
 
                             <form action="{{ route('bancas.produtos.destroy', ['banca' => $banca->id, 'produto' => $produto->id]) }}" 
                                   method="POST" style="display:inline;">

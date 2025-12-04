@@ -28,7 +28,7 @@
                 <div class="card item-card d-flex flex-column h-100" style="border-radius: 10px; overflow:hidden; cursor:pointer;">
                     
                     <!-- Imagem -->
-                    <img src="{{ asset('storage/uploads/' . $banca->foto_url) }}" 
+                    <img src="{{ $banca->foto_url }}" 
                          class="card-img-top"
                          alt="{{ $banca->nome_fantasia }}"
                          style="height: 180px; object-fit: cover;">
@@ -50,13 +50,16 @@
                         </p>
 
                         <p class="card-text" style="font-size: 14px;">
-                            @if($banca->instagram)
-                                <a href="https://instagram.com/{{ $banca->instagram }}" target="_blank">
-                                    {{ $banca->instagram }}
-                                </a>
-                            @else
-                                Sem Instagram
-                            @endif
+                            <i class="fab fa-instagram"></i>
+                            <span>
+                                @if($banca->instagram)
+                                    <a href="https://instagram.com/{{ $banca->instagram }}" target="_blank">
+                                        {{ $banca->instagram }}
+                                    </a>
+                                @else
+                                    Sem Instagram
+                                @endif
+                            </span>
                         </p>
 
                         <div class="d-flex gap-2 align-items-center flex-wrap">

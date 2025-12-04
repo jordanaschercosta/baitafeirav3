@@ -62,7 +62,7 @@
 <!-- Preview da imagem -->
 @if(!empty($produto->imagem_url))
     <img id="preview"
-         src="{{ asset('storage/uploads/' . $produto->imagem_url) }}"
+         src="{{ $produto->imagem_url }}"
          style="max-width: 300px; display:block;">
 @else
     <img id="preview" style="max-width: 300px; display:none;">

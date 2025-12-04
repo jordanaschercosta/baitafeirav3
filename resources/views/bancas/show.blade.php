@@ -53,7 +53,7 @@
 <div class="row align-items-center">
     <div class="col-md-3 mb-3">
         <img 
-            src="{{ asset('storage/uploads/' . $banca->foto_url) }}"
+            src="{{ $banca->foto_url }}"
             class="img-fluid rounded"
             style="max-width: 250px;"
             alt="{{ $banca->nome_fantasia }}"
@@ -101,7 +101,7 @@
         @foreach ($banca->produtos as $produto)
             <div class="col-md-3 mb-4">
                 <div class="card item-card d-flex flex-column h-100" style="border-radius: 10px; overflow:hidden; cursor:pointer;">
-                    <img src="{{ asset('storage/uploads/' . $produto->imagem_url) }}"
+                    <img src="{{ $produto->imagem_url }}"
                          class="card-img-top"
                          alt="{{ $produto->nome }}"
                          style="height: 180px; object-fit: cover;">
@@ -178,7 +178,7 @@
 
                     {{-- Imagem --}}
                     <img 
-                        src="{{ asset('storage/uploads/' . $banca->foto_url) }}"
+                        src="{{ $banca->foto_url }}"
                         class="card-img-top"
                         alt="{{ $banca->nome_fantasia }}"
                         style="height: 180px; object-fit: cover;"

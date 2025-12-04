@@ -18,7 +18,7 @@
 </nav>
 
 <div class="banner">
-    <img style="width: 100%; margin-bottom: 1.2pc;" src="{{ asset('storage/uploads/' . $evento->imagem_url) }}">
+    <img style="width: 100%; margin-bottom: 1.2pc;" src="{{ $evento->imagem_url }}">
 </div>
 @if ($evento->status == StatusEvento::CONFIRMADO)
     @if (isEventOrganizador($evento->user->id))
@@ -93,7 +93,7 @@
     @foreach ($listaBancas as $banca)
         <a href="{{ route('bancas.show', ['banca' => $banca->slug, 'evento' => $evento->id]) }}" class="col-md-2 click-item">
             <div class="img-wrapper">
-                <img src="{{ asset('storage/uploads/' . $banca->foto_url) }}">
+                <img src="{{ $banca->foto_url }}">
                 <p class="text-center">{{ $banca->nome_fantasia }}</p>
             </div>
         </a>
