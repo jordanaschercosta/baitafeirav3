@@ -44,7 +44,7 @@
 
 <div class="form-group">
     <img id="preview" style="max-width: 1000px;" 
-         src="{{ isset($evento->imagem_url) ? $evento->imagem_url }}">
+         src="{{ $evento->imagem_url }}">
 </div>
 
 <div class="form-group">

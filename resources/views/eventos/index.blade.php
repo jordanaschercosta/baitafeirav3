@@ -91,7 +91,7 @@
                             </a>
                             
                             @if (isEventOrganizador($evento->user_id))
-                                <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-sm btn-primary mb-1 w-100">
+                                <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-sm btn-light mb-1 w-100">
                                     Editar
                                 </a>
                                 <form action="{{ route('eventos.destroy', $evento->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja cancelar evento?')">

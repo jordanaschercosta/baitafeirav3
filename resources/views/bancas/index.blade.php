@@ -62,17 +62,16 @@
                             </span>
                         </p>
 
-                        <div class="d-flex gap-2 align-items-center flex-wrap">
 
-                            <a href="{{ route('bancas.produtos.index', $banca->id) }}" class="btn btn-sm btn-light">
+                            <a href="{{ route('bancas.produtos.index', $banca->id) }}" class="btn btn-sm btn-light mb-1 w-100">
                                 Produtos
                             </a>
 
-                            <a href="{{ route('bancas.show', $banca->slug) }}" class="btn btn-sm btn-light">
+                            <a href="{{ route('bancas.show', $banca->slug) }}" class="btn btn-sm btn-light mb-1 w-100">
                                 Ver
                             </a>
 
-                            <a href="{{ route('bancas.edit', $banca->id) }}" class="btn btn-sm btn-light">
+                            <a href="{{ route('bancas.edit', $banca->id) }}" class="btn btn-sm btn-light mb-1 w-100">
                                 Editar
                             </a>
 
@@ -83,12 +82,10 @@
                                 @csrf
                                 @method('DELETE')
 
-                                <button type="submit" class="btn btn-sm btn-danger">
+                                <button type="submit" class="btn btn-sm btn-danger mb-1 w-100">
                                     Excluir
                                 </button>
                             </form>
-
-                        </div>
 
                     </div>
                 </div>
