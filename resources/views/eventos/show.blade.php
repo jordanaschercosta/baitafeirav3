@@ -89,17 +89,20 @@
 
 <br>
 <h4>Bancas Participantes</h4>
-<div class="row">
-    @foreach ($listaBancas as $banca)
-        <a href="{{ route('bancas.show', ['banca' => $banca->slug, 'evento' => $evento->id]) }}" class="col-md-2 click-item">
-            <div class="img-wrapper">
-                <img src="{{ $banca->foto_url }}">
-                <p class="text-center">{{ $banca->nome_fantasia }}</p>
-            </div>
-        </a>
-    @endforeach
-</div>
-
+@if ($listaBancas)
+    <div class="row">
+        @foreach ($listaBancas as $banca)
+            <a href="{{ route('bancas.show', ['banca' => $banca->slug, 'evento' => $evento->id]) }}" class="col-md-2 click-item">
+                <div class="img-wrapper">
+                    <img src="{{ $banca->foto_url }}">
+                    <p class="text-center">{{ $banca->nome_fantasia }}</p>
+                </div>
+            </a>
+        @endforeach
+    </div>
+@else
+    <p class="text-sm text-gray-600 text-center">Nenhuma banca confirmou presença neste evento.</p>
+@endif
 <br>
 
 <h4>Localização</h4>

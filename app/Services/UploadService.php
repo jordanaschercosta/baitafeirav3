@@ -22,13 +22,21 @@ class UploadService
     
             $filename = uniqid() . '.' . $type;
 
-            $path = public_path('storage/uploads/' . $filename);
+            $uploadDir = app()->environment('production')
+                ? base_path('../public_html/storage/uploads')
+                : public_path('storage/uploads');
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            $path = $uploadDir . '/' . $filename;
 
             file_put_contents($path, $image);
 
             $publicUrl = asset('storage/uploads/' . $filename);
 
-            return $publicUrl; 
+            return $publicUrl;
 
         } catch (Exception $exception) {
 
