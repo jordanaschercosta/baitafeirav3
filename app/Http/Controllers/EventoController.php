@@ -167,7 +167,6 @@ class EventoController extends Controller
             $reagendado = true;
         }
 
-        // campos de endereço que devem ser comparados
         $camposEndereco = [
             'cep',
             'rua',
@@ -180,7 +179,7 @@ class EventoController extends Controller
         foreach ($camposEndereco as $campo) {
             if ($evento->$campo <> $request->$campo) {
                 $reagendado = true;
-                break; // já achou uma diferença, não precisa continuar
+                break;
             }
         }
 
@@ -234,7 +233,7 @@ class EventoController extends Controller
                 ->with('success', 'Evento excluído com sucesso!');
         }
         
-        // $this->crudService->cancelaEvento($id);
+        $this->crudService->cancelaEvento($id);
         $this->notificacaoService->enviarNotificacao($evento, TipoNotificacao::EVENTO_CANCELADO);
 
         return redirect()
