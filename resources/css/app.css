@@ -71,12 +71,12 @@ body {
 }
 
 .title-center::before {
-    right: 50%;
+    right: 54%;
     margin-right: 85px; /* distância da palavra */
 }
 
 .title-center::after {
-    left: 50%;
+    left: 54%;
     margin-left: 85px;  /* distância da palavra */
 }
 

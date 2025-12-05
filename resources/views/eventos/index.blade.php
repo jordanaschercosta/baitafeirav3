@@ -42,10 +42,12 @@
                     
                     <!-- Imagem do evento -->
                     @if($evento->imagem_url)
-                        <img src="{{ $evento->imagem_url }}" 
-                             class="card-img-top" 
-                             alt="{{ $evento->titulo }}" 
-                             style="height: 180px; object-fit: cover;">
+                        <div class="thumbnail">
+                            <img src="{{ $evento->imagem_url }}" 
+                                class="card-img-top" 
+                                alt="{{ $evento->titulo }}" 
+                                style="height: 180px; object-fit: cover;">
+                        </div>
                     @endif
 
                     <div class="card-body d-flex flex-column">

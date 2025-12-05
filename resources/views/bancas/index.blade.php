@@ -28,11 +28,12 @@
                 <div class="card item-card d-flex flex-column h-100" style="border-radius: 10px; overflow:hidden; cursor:pointer;">
                     
                     <!-- Imagem -->
-                    <img src="{{ $banca->foto_url }}" 
-                         class="card-img-top"
-                         alt="{{ $banca->nome_fantasia }}"
-                         style="height: 180px; object-fit: cover;">
-
+                    <div class="thumbnail">
+                        <img src="{{ $banca->foto_url }}" 
+                            class="card-img-top"
+                            alt="{{ $banca->nome_fantasia }}"
+                            style="height: 180px; object-fit: cover;">
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ $banca->nome_fantasia }}</h5>
 

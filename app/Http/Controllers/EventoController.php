@@ -59,7 +59,7 @@ class EventoController extends Controller
         }
 
         $evento = $this->crudService->createEvento([
-            'titulo' => 'k3pq3pw'.rand() . $request->titulo,
+            'titulo' => $request->titulo,
             'inicio' => $request->inicio,
             'fim' => $request->fim,
             'descricao' => $request->descricao,
@@ -167,6 +167,23 @@ class EventoController extends Controller
             $reagendado = true;
         }
 
+        // campos de endereço que devem ser comparados
+        $camposEndereco = [
+            'cep',
+            'rua',
+            'bairro',
+            'numero',
+            'cidade',
+            'uf',
+        ];
+
+        foreach ($camposEndereco as $campo) {
+            if ($evento->$campo <> $request->$campo) {
+                $reagendado = true;
+                break; // já achou uma diferença, não precisa continuar
+            }
+        }
+
         $this->crudService->atualizarEvento($evento->id, [
             'titulo' => $request->titulo,
             'inicio' => $request->inicio,
@@ -192,7 +209,8 @@ class EventoController extends Controller
         }
 
         if ($reagendado) {
-            // $this->crudService->createNotificacao(TipoNotificacao::EVENTO_REAGENDADO, $evento);
+            $evento = $this->crudService->getEventoById($evento->id);
+            $this->notificacaoService->enviarNotificacao($evento, TipoNotificacao::EVENTO_REAGENDADO);
         }
 
         return redirect()
@@ -216,8 +234,8 @@ class EventoController extends Controller
                 ->with('success', 'Evento excluído com sucesso!');
         }
         
-        $this->notificacaoService->enviarNotificacao($evento, TipoNotificacao::EVENTO_CANCELADO);
         $this->crudService->cancelaEvento($id);
+        $this->notificacaoService->enviarNotificacao($evento, TipoNotificacao::EVENTO_CANCELADO);
 
         return redirect()
             ->route('eventos.index')

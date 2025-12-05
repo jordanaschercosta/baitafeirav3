@@ -20,7 +20,6 @@
 <div class="banner">
     <img style="width: 100%; margin-bottom: 1.2pc;" src="{{ $evento->imagem_url }}">
 </div>
-status: {{ $evento->status }} -
 
 @if ($evento->status == StatusEvento::CONFIRMADO)
     @if (isEventOrganizador($evento->user->id))
@@ -90,13 +89,15 @@ status: {{ $evento->status }} -
 </p>
 
 <br>
-<h4>Bancas Participantes</h4>
+<h4 class="title-center">Bancas Participantes</h4>
 @if ($listaBancas)
     <div class="row">
         @foreach ($listaBancas as $banca)
             <a href="{{ route('bancas.show', ['banca' => $banca->slug, 'evento' => $evento->id]) }}" class="col-md-2 click-item">
                 <div class="img-wrapper">
-                    <img src="{{ $banca->foto_url }}">
+                    <div class="thumbnail">
+                        <img src="{{ $banca->foto_url }}">
+                    </div>
                     <p class="text-center">{{ $banca->nome_fantasia }}</p>
                 </div>
             </a>
@@ -107,7 +108,7 @@ status: {{ $evento->status }} -
 @endif
 <br>
 
-<h4>Localização</h4>
+<h4 class="title-center">Localização</h4>
 <p>{{ $evento->endereco }}</p>
 
 <div id="map"></div>
@@ -130,7 +131,7 @@ status: {{ $evento->status }} -
 
 <br>
 
-<h4>Organizador</h4>
+<h4 class="title-center">Organizador</h4>
 {{-- INFOS EXPOSITOR --}}
 <p class="mb-1">
     <i class="fas fa-envelope"></i>

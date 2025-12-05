@@ -29,11 +29,12 @@
             <div class="col-md-3 mb-4">
                 <div class="card item-card" style="border-radius: 10px; overflow:hidden; cursor:pointer;">
                     <!-- Imagem -->
-                    <img src="{{ $produto->imagem_url }}"
-                         class="card-img-top"
-                         alt="{{ $produto->nome }}"
-                         style="height: 180px; object-fit: cover;">
-
+                    <div class="thumbnail">
+                        <img src="{{ $produto->imagem_url }}"
+                            class="card-img-top"
+                            alt="{{ $produto->nome }}"
+                            style="height: 180px; object-fit: cover;">
+                    </div>
                     <div class="card-body">
                         <!-- Nome do produto -->
                         <h5 class="card-title">{{ $produto->nome }}</h5>
@@ -74,20 +75,19 @@
                         @endif
 
                         <!-- Ações -->
-                        <div class="d-flex justify-content-between">
                             <a href="{{ route('bancas.produtos.edit', ['banca' => $banca->id, 'produto' => $produto->id]) }}" 
-                               class="btn btn-sm btn-light">Editar</a>
+                               class="btn btn-sm btn-light mb-1 w-100">Editar</a>
 
                             <form action="{{ route('bancas.produtos.destroy', ['banca' => $banca->id, 'produto' => $produto->id]) }}" 
-                                  method="POST" style="display:inline;">
+                                  method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger"
+                                <button type="submit" class="btn btn-sm btn-danger mb-1 w-100"
                                         onclick="return confirm('Tem certeza que deseja excluir o produto?')">
                                     Excluir
                                 </button>
                             </form>
-                        </div>
+                        
 
                     </div>
                 </div>

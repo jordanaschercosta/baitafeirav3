@@ -51,16 +51,16 @@
 </p>
 
 <div class="row align-items-center">
-    <div class="col-md-3 mb-3">
+    <div class="col-md-2 mb-3">
         <img 
             src="{{ $banca->foto_url }}"
             class="img-fluid rounded"
-            style="max-width: 250px;"
+            style="max-width: 180px;"
             alt="{{ $banca->nome_fantasia }}"
         >
     </div>
 
-    <div class="col-md-7">
+    <div class="col-md-10">
         <p style="font-size:14px;">
             <i class="fas fa-align-left text-secondary"></i>
             {{ $banca->descricao }}
@@ -94,17 +94,19 @@
     </div>
 </div>
 
-<h4>Produtos</h4>
+<h4 class="title-center">Produtos</h4>
 
 @if (!empty($banca->produtos) && $banca->produtos->isNotEmpty())
     <div class="row">
         @foreach ($banca->produtos as $produto)
             <div class="col-md-3 mb-4">
-                <div class="card item-card d-flex flex-column h-100" style="border-radius: 10px; overflow:hidden; cursor:pointer;">
-                    <img src="{{ $produto->imagem_url }}"
-                         class="card-img-top"
-                         alt="{{ $produto->nome }}"
-                         style="height: 180px; object-fit: cover;">
+                <div class="card item-card d-flex flex-column h-100" style="border-radius: 20px; overflow:hidden; cursor:pointer;">
+                    <div class="thumbnail">
+                        <img src="{{ $produto->imagem_url }}"
+                            class="card-img-top"
+                            alt="{{ $produto->nome }}"
+                            style="height: 180px; object-fit: cover;">
+                    </div>
 
                     <div class="card-body">
                         <h5 class="card-title">{{ $produto->nome }}</h5>
@@ -136,17 +138,15 @@
                         
                         
                         @if(in_array($produto->id, $produtos_favoritos))
-                                <form action="{{ route('favoritos.destroy', $produto->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-
+                            <form action="{{ route('favoritos.destroy', $produto->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
                                     <button class="btn btn-outline-danger btn-sm w-100">
-                                        <i class="fa-solid fa-heart"></i> Remover dos Favoritos
-                                    </button>
-                                </form>
-
-                            @else
-                                <form action="{{ route('favoritos.store') }}" method="POST" class="d-inline">
+                                    <i class="fa-solid fa-heart"></i> Remover dos Favoritos
+                                </button>
+                            </form>
+                        @elseif(!isUserDonoBanca($banca->user_id))
+                            <form action="{{ route('favoritos.store') }}" method="POST" class="d-inline">
                                     @csrf
                                     <input type="hidden" name="produto_id" value="{{ $produto->id }}">
                                     <button class="btn btn-light btn-sm w-100">
@@ -154,7 +154,6 @@
                                     </button>
                                 </form>
                             @endif
-                        
                     </div>
                 </div>
             </div>
@@ -164,11 +163,13 @@
     <p class="text-center">Nenhum produto cadastrado</p>
 @endif
 
+<br>
+<h4 class="title-center">Próximos Eventos</h4>
 @include("eventos.list", ['proximosEventos' => $eventos, "paginacao" => false])
 
 {{-- BANCAS EXPOSITOR --}}
 @if(!$bancas->isEmpty())
-    <h4 class="mb-3">Bancas deste expositor</h4>
+    <h4 class="title-center mb-3">Bancas deste expositor</h4>
 
     <div class="row">
         @foreach($bancas as $banca)

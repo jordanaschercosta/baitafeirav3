@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models;
+use App\Models\Enum\StatusEvento;
 use App\Models\Enum\TipoNotificacao;
 use Exception;
 use Carbon\Carbon;
@@ -39,9 +40,14 @@ class NotificacaoService
 
             try {
                 $this->crudService->createNotificacao($tipo, $obj, $destinario);
-                $this->enviarWPMessage($obj, $tipo, $destinario->phone);
+                if ($tipo == TipoNotificacao::EVENTO_CANCELADO) {
+                    $this->emailService->cancelamentoEvento($destinario, $obj);
+                } else if ($tipo == TipoNotificacao::EVENTO_REAGENDADO) {
+                    $this->emailService->atualizacaoEvento($destinario, $obj);
+                }
             } catch (Exception $exception) {
                 //
+                // dd($exception->getMessage());
             }
         }
     }
@@ -84,6 +90,7 @@ class NotificacaoService
 
         return $users;
     }
+
 
     protected function enviarWPMessage($obj, $tipo, $phone) 
     {
