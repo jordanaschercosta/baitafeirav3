@@ -51,6 +51,9 @@ Route::middleware(['autorize'])->group(function () {
     Route::resource('favoritos', FavoritoController::class);
     Route::resource('notificacoes', NotificacaoController::class);
 
+    Route::post('eventos/reactivate/{id}', [EventoController::class, 'reactivate'])
+        ->name('eventos.reactivate');
+
     Route::post('/favoritos', [FavoritoController::class, 'store'])->name('favoritos.store');
     Route::delete('favoritos/{favorito}', [FavoritoController::class, 'destroy'])->name('favoritos.destroy');
 

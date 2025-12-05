@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Enum\StatusEvento;
 use App\Models\Enum\TipoNotificacao;
 use App\Models\Evento;
+use App\Models\Participacao;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -162,12 +163,8 @@ class EventoController extends Controller
             $longitude = $coordenadas['longitude'];
         }
 
-        $reagendado = false;
-        if ($evento->inicio <> $request->inicio) {
-            $reagendado = true;
-        }
-
         $camposEndereco = [
+            'inicio',
             'cep',
             'rua',
             'bairro',
@@ -176,6 +173,7 @@ class EventoController extends Controller
             'uf',
         ];
 
+        $reagendado = false;
         foreach ($camposEndereco as $campo) {
             if ($evento->$campo <> $request->$campo) {
                 $reagendado = true;
@@ -218,6 +216,24 @@ class EventoController extends Controller
     }
 
     /**
+     */
+    public function reactivate(int $id)
+    {
+        $evento = $this->crudService->getEventoById($id);
+
+        $this->validaOwner($this->crudService->getEventoById($id));
+
+        $evento->status = StatusEvento::CONFIRMADO;
+        $evento->save();
+
+        $this->notificacaoService->enviarNotificacao($evento, TipoNotificacao::EVENTO_REAGENDADO);
+
+        return redirect()
+            ->route('eventos.index')
+            ->with('success', 'Evento remarcado com sucesso!');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(int $id)
@@ -227,13 +243,15 @@ class EventoController extends Controller
         $this->validaOwner($this->crudService->getEventoById($id));
 
         if ($evento->status == StatusEvento::CANCELADO) {
+            Participacao::where('evento_id', $evento->id)->delete();
             $evento->delete();
+
             return redirect()
                 ->route('eventos.index')
                 ->with('success', 'Evento excluído com sucesso!');
         }
-        
-        // $this->crudService->cancelaEvento($id);
+
+        $this->crudService->cancelaEvento($id);
         $this->notificacaoService->enviarNotificacao($evento, TipoNotificacao::EVENTO_CANCELADO);
 
         return redirect()

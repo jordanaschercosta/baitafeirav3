@@ -49,12 +49,8 @@ class NotificacaoService
                 }
             } catch (Exception $exception) {
                 //
-                var_dump($exception);
-                exit;
             }
         }
-
-        exit;
     }
 
     /**

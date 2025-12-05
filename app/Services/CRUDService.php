@@ -298,8 +298,6 @@ class CRUDService
             return false;
         }
 
-        Models\Participacao::where('evento_id', $evento->id)->delete();
-
         $evento->status = StatusEvento::CANCELADO;
         $evento->save();
     }
