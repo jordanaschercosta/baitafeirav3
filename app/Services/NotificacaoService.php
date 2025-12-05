@@ -67,8 +67,6 @@ class NotificacaoService
             }
         }
 
-        var_dump($users);
-
         if ($obj instanceof Models\Participacao) {
             $bancasFavoritados = [];
             if (!empty($obj->bancas)) {
