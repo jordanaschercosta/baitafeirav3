@@ -87,7 +87,7 @@
 
                         <!-- Preço -->
                         @if($produto->em_promocao)
-                            <p class="card-text fw-bold">
+                            <p class="card-text fw-bold" style="font-size: 82%">
                                 <span class="text-muted text-decoration-line-through">
                                     R$ {{ number_format($produto->preco, 2, ',', '.') }}
                                 </span>
@@ -101,7 +101,7 @@
                                 </span>
                             </p>
                         @else
-                            <p class="card-text fw-bold">
+                            <p class="card-text fw-bold" style="font-size: 82%">
                                 R$ {{ number_format($produto->preco, 2, ',', '.') }}
                             </p>
                         @endif

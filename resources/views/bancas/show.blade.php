@@ -117,7 +117,7 @@
 
                         <!-- Preço -->
                         @if($produto->em_promocao)
-                            <p class="card-text fw-bold">
+                            <p class="card-text fw-bold" style="font-size: 82%">
                                 <span class="text-muted text-decoration-line-through">
                                     R$ {{ number_format($produto->preco, 2, ',', '.') }}
                                 </span>
@@ -131,7 +131,7 @@
                                 </span>
                             </p>
                         @else
-                            <p class="card-text fw-bold">
+                            <p class="card-text fw-bold" >
                                 R$ {{ number_format($produto->preco, 2, ',', '.') }}
                             </p>
                         @endif
@@ -174,52 +174,7 @@
 @if(!$bancas->isEmpty())
     <h4 class="title-center mb-3">Bancas deste expositor</h4>
 
-    <div class="row">
-        @foreach($bancas as $banca)
-            <div class="col-md-3 mb-4">
-                <div class="card item-card d-flex flex-column h-100"
-                     style="border-radius: 10px; overflow: hidden;">
-
-                    {{-- Imagem --}}
-                    <img 
-                        src="{{ $banca->foto_url }}"
-                        class="card-img-top"
-                        alt="{{ $banca->nome_fantasia }}"
-                        style="height: 180px; object-fit: cover;"
-                    >
-
-                    <div class="card-body d-flex flex-column">
-
-                        {{-- Nome --}}
-                        <h5 class="card-title">
-                            {{ $banca->nome_fantasia }}
-                        </h5>
-
-                        {{-- Categoria --}}
-                        <p class="card-text mb-1" style="font-size:14px;">
-                            {{ $banca->categoria?->nome ?? 'Sem categoria' }}
-                        </p>
-
-                        {{-- Instagram --}}
-                        <p class="card-text" style="font-size:14px;">
-                            @if($banca->instagram)
-                                <i class="fab fa-instagram"></i>
-                                <a href="https://instagram.com/{{ ltrim($banca->instagram, '@') }}"
-                                   target="_blank">
-                                    {{ '@' . ltrim($banca->instagram, '@') }}
-                                </a>
-                            @else
-                                <span class="text-muted">
-                                    Sem Instagram
-                                </span>
-                            @endif
-                        </p>
-
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
+    @include('bancas._list', ['bancas' => $bancas])    
 @endif
 
 @endsection
