@@ -52,8 +52,9 @@ class NotificacaoService
                 var_dump($exception);
                 exit;
             }
-            
         }
+
+        exit;
     }
 
     /**
@@ -69,6 +70,8 @@ class NotificacaoService
                 $users[] = $participacao->usuario; 
             }
         }
+
+        var_dump($users);
 
         if ($obj instanceof Models\Participacao) {
             $bancasFavoritados = [];
