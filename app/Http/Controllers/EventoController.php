@@ -147,6 +147,7 @@ class EventoController extends Controller
         $request->validate([
             'inicio' => 'required|date|after_or_equal:today',
             'fim' => 'required|date|after:inicio',
+            'cropped_image' => 'required',
             'cep' => 'required',
             'rua' => 'required',
             'numero' => 'required',
