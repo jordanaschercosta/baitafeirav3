@@ -71,8 +71,4 @@
             <input type="submit" class="btn btn-primary" value="Criar Conta" />
         </div>
     </form>
-
-    <p class="text-sm text-gray-600 text-center mt-4">
-        Já tem conta? <a href="#" class="text-red-500 underline">Entrar</a>
-    </p>
 @endsection
