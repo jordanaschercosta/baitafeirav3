@@ -115,6 +115,9 @@ class CRUDService
 
     public function createEvento(array $data)
     {
+        echo StatusEvento::CONFIRMADO;
+        exit;
+
         return Models\Evento::create([
             'titulo'    => $data['titulo'],
             'inicio'    => $data['inicio'],
@@ -143,7 +146,6 @@ class CRUDService
             'fim'       => $data['fim'],
             'descricao' => $data['descricao'],
             'rua'       => $data['rua'],
-            'status'    => $data['status'],
             'numero'    => $data['numero'],
             'bairro'    => $data['bairro'],
             'cidade'    => $data['cidade'],
