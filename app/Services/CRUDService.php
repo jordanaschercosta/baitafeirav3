@@ -346,6 +346,9 @@ class CRUDService
             $url = route('bancas.show', $object->banca->slug);
         }
 
+        echo 'userId: ' . $destinario->id;
+        echo "\n";
+
         $dataSave = [
             'user_id' => $destinario->id,
             'titulo' => $titulo,

@@ -24,7 +24,7 @@ class NotificacaoService
     public function enviarNotificacao($obj, string $tipo)
     {
         $destinatarios = $this->getListaTransmissao($obj);
-
+        
         /** @var \App\Models\User[] $destinatarios */
         foreach ($destinatarios as $destinario) {
 
@@ -39,6 +39,8 @@ class NotificacaoService
             }
 
             try {
+                echo $destinario->email;
+                echo "\n";
                 $this->crudService->createNotificacao($tipo, $obj, $destinario);
                 if ($tipo == TipoNotificacao::EVENTO_CANCELADO) {
                     $this->emailService->cancelamentoEvento($destinario, $obj);
@@ -47,6 +49,8 @@ class NotificacaoService
                 }
             } catch (Exception $exception) {
                 //
+                var_dump($exception);
+                exit;
             }
             
         }
