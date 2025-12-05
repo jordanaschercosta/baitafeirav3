@@ -234,7 +234,7 @@ class EventoController extends Controller
                 ->with('success', 'Evento excluído com sucesso!');
         }
         
-        $this->crudService->cancelaEvento($id);
+        // $this->crudService->cancelaEvento($id);
         $this->notificacaoService->enviarNotificacao($evento, TipoNotificacao::EVENTO_CANCELADO);
 
         return redirect()

@@ -11,7 +11,9 @@
     </div>
 @endif
 
-<h4>Minhas Bancas</h4>
+@if ($bancas->count() > 0)
+    <h4>Minhas Bancas</h4>
+@endif
 
 @php
     $bancasSelecionadas = isset($participacao->bancas)
