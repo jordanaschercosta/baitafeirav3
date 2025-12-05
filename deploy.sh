@@ -1,6 +1,6 @@
 
 # 1. Navegar até a pasta do projeto
-cd /home/u718577294/baitafeiraapp.com.br || exit
+cd /home/u718577294/domains/baitafeiraapp.com.br
 
 # 2. Puxar alterações do Git
 echo "Pulling latest changes from Git..."
@@ -10,10 +10,6 @@ git reset --hard origin/main
 # 3. Instalar dependências do Composer
 echo "Installing/updating Composer dependencies..."
 composer install --no-dev --optimize-autoloader
-
-# 4. Copiar conteúdo do public para public_html
-echo "Deploying public folder to public_html..."
-cp -r public/* public_html/
 
 # 5. Definir permissões corretas para storage e bootstrap/cache
 echo "Setting permissions..."
