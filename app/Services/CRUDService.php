@@ -298,6 +298,8 @@ class CRUDService
             return false;
         }
 
+        Models\Participacao::where('evento_id', $evento->id)->delete();
+
         $evento->status = StatusEvento::CANCELADO;
         $evento->save();
     }
@@ -343,9 +345,6 @@ class CRUDService
 
             $url = route('bancas.show', $object->banca->slug);
         }
-
-        echo 'userId: ' . $destinario->id;
-        echo "\n";
 
         $dataSave = [
             'user_id' => $destinario->id,
