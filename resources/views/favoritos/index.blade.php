@@ -66,6 +66,9 @@
         @foreach ($produtosFavoritos as $produtoFavorito)
             @php
                 $produto = $produtoFavorito->produto;
+                if (empty($produto)) {
+                    continue;
+                }
             @endphp
 
             <div class="col-md-3 mb-4">
@@ -102,7 +105,10 @@
                                 R$ {{ number_format($produto->preco, 2, ',', '.') }}
                             </p>
                         @endif
-                            <form action="{{ route('favoritos.destroy', $produto->id) }}" method="POST" class="d-inline">
+                           @php
+                                $favoritado = isProdutoFavoritado($produto->favoritos);
+                            @endphp
+                            <form action="{{ route('favoritos.destroy', $favoritado) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
 

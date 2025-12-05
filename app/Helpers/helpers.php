@@ -35,3 +35,16 @@ if (!function_exists('isUserDonoBanca')) {
         return session('user_id') === $userBancaId;
     }
 }
+
+if (!function_exists('isProdutoFavoritado')) {
+    function isProdutoFavoritado($favoritados)
+    {
+        foreach ($favoritados as $favoritado) {
+            if (session('user_id') === $favoritado->user_id) {
+                return $favoritado->id;
+            }
+        }
+
+        return false;
+    }
+}

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Favorito;
 use App\Models\Banca;
+use App\Models\Produto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,9 +38,15 @@ class FavoritoController extends Controller
         if ($request->produto_id) {
             $campo = 'produto_id';
             $id = $request->produto_id;
+            $existeFavorito = Produto::where('id', $id)->first();
         } else {
             $campo = 'banca_id';
             $id = $request->banca_id;
+            $existeFavorito = Banca::where('id', $id)->first();
+        }
+
+        if (empty($existeFavorito)) {
+            return back()->with('error', 'Favorito não encontrado!');
         }
 
         $existe = Favorito::where('user_id', $userId)

@@ -136,9 +136,12 @@
                             </p>
                         @endif
                         
-                        
-                        @if(in_array($produto->id, $produtos_favoritos))
-                            <form action="{{ route('favoritos.destroy', $produto->id) }}" method="POST" class="d-inline">
+                        @php
+                            $favoritado = isProdutoFavoritado($produto->favoritos);
+                        @endphp
+
+                        @if($favoritado)
+                            <form action="{{ route('favoritos.destroy', $favoritado) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                     <button class="btn btn-outline-danger btn-sm w-100">
@@ -147,13 +150,13 @@
                             </form>
                         @elseif(!isUserDonoBanca($banca->user_id))
                             <form action="{{ route('favoritos.store') }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <input type="hidden" name="produto_id" value="{{ $produto->id }}">
-                                    <button class="btn btn-light btn-sm w-100">
-                                        <i class="fa-regular fa-heart"></i> Adicionar aos Favoritos
-                                    </button>
-                                </form>
-                            @endif
+                                @csrf
+                                <input type="hidden" name="produto_id" value="{{ $produto->id }}">
+                                <button class="btn btn-light btn-sm w-100">
+                                    <i class="fa-regular fa-heart"></i> Adicionar aos Favoritos {{ $produto->id }}
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
             </div>
