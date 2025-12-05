@@ -265,3 +265,18 @@ section#banner {
 .breadcrumb-item + .breadcrumb-item::before {
     color: #b28c73; /* tom neutro combinando */
 }
+
+.social-btn {
+    width: 36px;
+    height: 36px;
+
+    padding: 0 !important;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    line-height: 1 !important;
+
+    font-size: 16px;
+}
