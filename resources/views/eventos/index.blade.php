@@ -91,18 +91,17 @@
                             <a href="{{ route('eventos.show', $evento->slug) }}" class="btn btn-sm btn-light mb-1 w-100">
                                 Ver
                             </a>
-
-                            @if ($evento->status == StatusEvento::CANCELADO)
-                                <form action="{{ route('eventos.reactivate', $evento->id) }}" method="POST">
-                                    @csrf
-                                    {{-- @method('UPDATE') --}}
-                                    <button type="submit" class="btn btn-sm btn-light w-100">
-                                        Remarcar
-                                    </button>
-                                </form>
-                            @endif
-
+    
                             @if (isEventOrganizador($evento->user_id))
+                                @if ($evento->status == StatusEvento::CANCELADO)
+                                    <form action="{{ route('eventos.reactivate', $evento->id) }}" method="POST">
+                                        @csrf
+                                        {{-- @method('UPDATE') --}}
+                                        <button type="submit" class="btn btn-sm btn-light w-100">
+                                            Remarcar
+                                        </button>
+                                    </form>
+                                @endif
                                 <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-sm btn-light mb-1 w-100">
                                     Editar
                                 </a>
