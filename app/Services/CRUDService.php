@@ -143,6 +143,7 @@ class CRUDService
             'fim'       => $data['fim'],
             'descricao' => $data['descricao'],
             'rua'       => $data['rua'],
+            'status'    => $data['status'],
             'numero'    => $data['numero'],
             'bairro'    => $data['bairro'],
             'cidade'    => $data['cidade'],
