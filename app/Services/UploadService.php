@@ -41,7 +41,7 @@ class UploadService
             $filename = Str::uuid() . '.' . $extension;
 
             // Caminho para gravar o arquivo
-            $uploadDir = public_path('uploads');
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'].'/uploads';
 
             // Cria a pasta se não existir
             if (!is_dir($uploadDir)) {
