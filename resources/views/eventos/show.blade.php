@@ -20,6 +20,8 @@
 <div class="banner">
     <img style="width: 100%; margin-bottom: 1.2pc;" src="{{ $evento->imagem_url }}">
 </div>
+status: {{ $evento->status }} -
+
 @if ($evento->status == StatusEvento::CONFIRMADO)
     @if (isEventOrganizador($evento->user->id))
         <form action="{{ route('eventos.destroy', $evento->id) }}"

@@ -40,6 +40,7 @@ class EventoController extends Controller
         $request->validate([
             'inicio' => 'required|date|after_or_equal:today',
             'fim' => 'required|date|after:inicio',
+            'status' => StatusEvento::CONFIRMADO,
             'imagem_url' => 'required',
             'cep' => 'required',
             'rua' => 'required',
